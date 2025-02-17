@@ -1,10 +1,12 @@
 import Papa from 'papaparse';
 
-export const saveDataToCSV = (data) => {
+export const saveDataToLocalStorage = (data) => {
   const csv = Papa.unparse(data);
   localStorage.setItem('dashboardData', csv);
-  
-  // Também salva como arquivo
+}
+
+export const downloadCSV = (data) => {
+  const csv = Papa.unparse(data);
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   if (link.download !== undefined) {

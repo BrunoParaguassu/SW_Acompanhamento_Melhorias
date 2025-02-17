@@ -44,7 +44,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
 import UploadIcon from '@mui/icons-material/Upload'
-import { saveDataToCSV, loadDataFromCSV, importCSVFile } from './utils/dataManager'
+import { saveDataToLocalStorage, loadDataFromCSV, importCSVFile, downloadCSV } from './utils/dataManager'
 
 const theme = createTheme({
   palette: {
@@ -190,7 +190,7 @@ function App() {
   const handleDelete = (index) => {
     const newData = data.filter((_, i) => i !== index)
     setData(newData)
-    saveDataToCSV(newData)
+    saveDataToLocalStorage(newData)
   }
 
   const handleInputChange = (e) => {
@@ -227,12 +227,12 @@ function App() {
     }
     
     setData(updatedData)
-    saveDataToCSV(updatedData)
+    saveDataToLocalStorage(updatedData)
     handleClose()
   }
 
   const handleSaveToFile = () => {
-    saveDataToCSV(data)
+    downloadCSV(data)
   }
 
   const calculateHCReduction = () => {
