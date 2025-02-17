@@ -81,7 +81,82 @@ const initialFormState = {
 }
 
 function App() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([
+    {
+      name: 'TLG2M',
+      responsavel: 'Denilson / Thaina / Janaina / Nicolau',
+      status: 'Implementado',
+      revisao: 'Rev00',
+      familia: 'TV',
+      uphAntigo: 100,
+      hcAntigo: 45,
+      tpAntigo: 0.275,
+      custoAntigo: 25.68,
+      upphAntigo: 4.45,
+      uphNovo: 220,
+      hcNovo: 43,
+      tpNovo: 0.204545455,
+      custoNovo: 26.38,
+      upphNovo: 4.89,
+      produtividade: 30
+    },
+    {
+      name: 'TRD55V',
+      responsavel: 'Denilson / Thaina / Janaina / Nicolau',
+      status: 'Implementado',
+      revisao: 'Rev07',
+      familia: 'TV',
+      uphAntigo: 220,
+      hcAntigo: 45,
+      tpAntigo: 0.079,
+      custoAntigo: 15.54,
+      upphAntigo: 4.95,
+      uphNovo: 230,
+      hcNovo: 41,
+      tpNovo: 0.74782887,
+      custoNovo: 13.95,
+      upphNovo: 5.61,
+      produtividade: 14
+    },
+    {
+      name: 'CPPC045MAOR1',
+      responsavel: 'Denilson / Ana Carolina / Charlie / Ricardo',
+      status: 'Implementado',
+      revisao: 'Rev00',
+      familia: 'TV',
+      uphAntigo: 180,
+      hcAntigo: 9.5,
+      tpAntigo: 0.086,
+      custoAntigo: 8.16,
+      upphAntigo: 11.58,
+      uphNovo: 200,
+      hcNovo: 7.5,
+      tpNovo: 0.06818118,
+      custoNovo: 5.18,
+      upphNovo: 14.67,
+      produtividade: 27,
+      ganhoPerPeca: (8.16 - 5.18).toFixed(2)
+    },
+    {
+      name: 'CPPC045PTHR1',
+      responsavel: 'Denilson / Ana Carolina / Charlie / Ricardo',
+      status: 'Implementado',
+      revisao: 'Rev00',
+      familia: 'TV',
+      uphAntigo: 190,
+      hcAntigo: 9.5,
+      tpAntigo: 0.086,
+      custoAntigo: 8.16,
+      upphAntigo: 11.58,
+      uphNovo: 210,
+      hcNovo: 7.5,
+      tpNovo: 0.06818118,
+      custoNovo: 5.18,
+      upphNovo: 14.67,
+      produtividade: 27,
+      ganhoPerPeca: (8.16 - 5.18).toFixed(2)
+    }
+  ])
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState(initialFormState)
   const [editIndex, setEditIndex] = useState(null)
@@ -160,6 +235,34 @@ function App() {
     saveDataToCSV(data)
   }
 
+  const calculateHCReduction = () => {
+    return data.reduce((total, item) => {
+      return total + (item.hcAntigo - item.hcNovo)
+    }, 0).toFixed(1)
+  }
+
+  const generateUPHTicks = () => {
+    if (data.length === 0) return [0, 10, 20, 30, 40, 50]
+    
+    const values = data.flatMap(d => [d.uphAntigo, d.uphNovo])
+    const min = Math.floor(Math.min(...values) / 10) * 10
+    const max = Math.ceil(Math.max(...values) / 10) * 10
+    
+    const ticks = []
+    for (let i = min; i <= max; i += 10) {
+      ticks.push(i)
+    }
+    return ticks
+  }
+
+  const generateHCTicks = () => {
+    const ticks = []
+    for (let i = 0; i <= 45; i += 5) {
+      ticks.push(i)
+    }
+    return ticks
+  }
+
   const handleImportCSV = async (event) => {
     const file = event.target.files[0]
     if (file) {
@@ -179,9 +282,15 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
-        <Container maxWidth="xl">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+        <Box sx={{ p: 2 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            mb: 4,
+            px: 2
+          }}>
             <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
               Dashboard Executivo - KPIs de Processo
             </Typography>
@@ -219,305 +328,371 @@ function App() {
             </Box>
           </Box>
 
-          {/* Form Dialog */}
-          <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-            <DialogTitle>{editIndex !== null ? 'Editar Dados' : 'Adicionar Novos Dados'}</DialogTitle>
-            <DialogContent>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    fullWidth
-                    label="Produto"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    fullWidth
-                    label="Responsável"
-                    name="responsavel"
-                    value={formData.responsavel}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      name="status"
-                      value={formData.status}
-                      label="Status"
-                      onChange={handleInputChange}
-                    >
-                      <MenuItem value="Implementado">Implementado</MenuItem>
-                      <MenuItem value="Em Andamento">Em Andamento</MenuItem>
-                      <MenuItem value="Pendente">Pendente</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Revisão"
-                    name="revisao"
-                    value={formData.revisao}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Família"
-                    name="familia"
-                    value={formData.familia}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Valores Antigos</Typography>
-                  <Divider />
-                </Grid>
-
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="UPH Antigo"
-                    name="uphAntigo"
-                    value={formData.uphAntigo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="HC Antigo"
-                    name="hcAntigo"
-                    value={formData.hcAntigo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="TP Antigo"
-                    name="tpAntigo"
-                    value={formData.tpAntigo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Custo Antigo"
-                    name="custoAntigo"
-                    value={formData.custoAntigo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="UPPH Antigo"
-                    name="upphAntigo"
-                    value={formData.upphAntigo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Valores Novos</Typography>
-                  <Divider />
-                </Grid>
-
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="UPH Novo"
-                    name="uphNovo"
-                    value={formData.uphNovo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="HC Novo"
-                    name="hcNovo"
-                    value={formData.hcNovo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="TP Novo"
-                    name="tpNovo"
-                    value={formData.tpNovo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Custo Novo"
-                    name="custoNovo"
-                    value={formData.custoNovo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} md={2.4}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="UPPH Novo"
-                    name="upphNovo"
-                    value={formData.upphNovo}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancelar</Button>
-              <Button onClick={handleSubmit} variant="contained">
-                {editIndex !== null ? 'Atualizar' : 'Adicionar'}
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          {/* Data Table */}
-          <TableContainer component={Paper} sx={{ mb: 4 }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Produto</TableCell>
-                  <TableCell>Responsável</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Revisão</TableCell>
-                  <TableCell>UPH (Antigo/Novo)</TableCell>
-                  <TableCell>HC (Antigo/Novo)</TableCell>
-                  <TableCell>Ganho por Peça</TableCell>
-                  <TableCell>Produtividade</TableCell>
-                  <TableCell>Ações</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.responsavel}</TableCell>
-                    <TableCell>{row.status}</TableCell>
-                    <TableCell>{row.revisao}</TableCell>
-                    <TableCell>{row.uphAntigo} / {row.uphNovo}</TableCell>
-                    <TableCell>{row.hcAntigo} / {row.hcNovo}</TableCell>
-                    <TableCell>{row.ganhoPerPeca}</TableCell>
-                    <TableCell>{row.produtividade}%</TableCell>
-                    <TableCell>
-                      <Tooltip title="Editar">
-                        <IconButton size="small" onClick={() => handleEdit(index)}>
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Excluir">
-                        <IconButton size="small" onClick={() => handleDelete(index)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
+          <Box sx={{ mx: 2, mb: 4 }}>
+            <TableContainer component={Paper} sx={{ 
+              maxHeight: '300px',
+              overflow: 'auto'
+            }}>
+              <Table size="small" stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Produto</TableCell>
+                    <TableCell>Responsável</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Revisão</TableCell>
+                    <TableCell>UPH (Antigo/Novo)</TableCell>
+                    <TableCell>HC (Antigo/Novo)</TableCell>
+                    <TableCell>Ganho por Peça</TableCell>
+                    <TableCell>Produtividade</TableCell>
+                    <TableCell>Ações</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {data.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.responsavel}</TableCell>
+                      <TableCell>{row.status}</TableCell>
+                      <TableCell>{row.revisao}</TableCell>
+                      <TableCell>{row.uphAntigo} / {row.uphNovo}</TableCell>
+                      <TableCell>{row.hcAntigo} / {row.hcNovo}</TableCell>
+                      <TableCell>{row.ganhoPerPeca}</TableCell>
+                      <TableCell>{row.produtividade}%</TableCell>
+                      <TableCell>
+                        <Tooltip title="Editar">
+                          <IconButton size="small" onClick={() => handleEdit(index)}>
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Excluir">
+                          <IconButton size="small" onClick={() => handleDelete(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
 
-          {/* Charts */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 3, height: 400, boxShadow: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                  Comparativo UPH
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <RechartsTooltip />
-                    <Legend />
-                    <Bar dataKey="uphNovo" fill="#1976d2" name="UPH Novo" />
-                    <Bar dataKey="uphAntigo" fill="#82ca9d" name="UPH Antigo" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </Paper>
+          <Box sx={{ mx: 2, mb: 4 }}>
+            <Grid container spacing={2} justifyContent="flex-end">
+              <Grid item xs={12} md={4}>
+                <Paper sx={{ 
+                  p: 2, 
+                  bgcolor: '#f5f5f5',
+                  textAlign: 'right'
+                }}>
+                  <Typography variant="h6" gutterBottom>
+                    Redução Total de Headcount
+                  </Typography>
+                  <Typography variant="h4" color="primary">
+                    {calculateHCReduction()} HC
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
+          </Box>
 
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 3, height: 400, boxShadow: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                  Comparativo Headcount
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <RechartsTooltip />
-                    <Legend />
-                    <Bar dataKey="hcNovo" fill="#1976d2" name="HC Novo" />
-                    <Bar dataKey="hcAntigo" fill="#82ca9d" name="HC Antigo" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </Paper>
-            </Grid>
+          <Box sx={{ px: 2 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 3, height: 450, boxShadow: 3 }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
+                    Comparativo UPH
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <ResponsiveContainer width="100%" height={350}>
+                    <BarChart 
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 100
+                      }}
+                      barGap={0}
+                      maxBarSize={50}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="name"
+                        interval={0}
+                        angle={-45}
+                        textAnchor="end"
+                        height={100}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis 
+                        ticks={generateUPHTicks()}
+                        domain={[
+                          dataMin => Math.floor(dataMin / 10) * 10,
+                          dataMax => Math.ceil(dataMax / 10) * 10
+                        ]}
+                      />
+                      <RechartsTooltip 
+                        formatter={(value, name) => [`${value} un/h`, name]}
+                      />
+                      <Legend />
+                      <Bar dataKey="uphNovo" fill="#1976d2" name="UPH Novo" />
+                      <Bar dataKey="uphAntigo" fill="#82ca9d" name="UPH Antigo" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Paper>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Paper sx={{ p: 3, height: 400, boxShadow: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                  Ganhos por Linha
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis yAxisId="left" />
-                    <YAxis yAxisId="right" orientation="right" />
-                    <RechartsTooltip />
-                    <Legend />
-                    <Line 
-                      yAxisId="left"
-                      type="monotone" 
-                      dataKey="ganhoPerPeca" 
-                      stroke="#1976d2" 
-                      name="Ganho por Peça" 
-                    />
-                    <Line 
-                      yAxisId="right"
-                      type="monotone" 
-                      dataKey="produtividade" 
-                      stroke="#ff7300" 
-                      name="Ganho em Produtividade (%)" 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Paper>
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 3, height: 450, boxShadow: 3 }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
+                    Comparativo Headcount
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <ResponsiveContainer width="100%" height={350}>
+                    <BarChart 
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 100
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="name"
+                        interval={0}
+                        angle={-45}
+                        textAnchor="end"
+                        height={100}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis 
+                        ticks={generateHCTicks()}
+                        domain={[0, 45]}
+                      />
+                      <RechartsTooltip />
+                      <Legend />
+                      <Bar dataKey="hcNovo" fill="#1976d2" name="HC Novo" />
+                      <Bar dataKey="hcAntigo" fill="#82ca9d" name="HC Antigo" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Paper sx={{ p: 3, height: 450, boxShadow: 3 }}>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
+                    Ganhos por Linha
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <ResponsiveContainer width="100%" height={350}>
+                    <LineChart data={data}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis yAxisId="left" />
+                      <YAxis yAxisId="right" orientation="right" />
+                      <RechartsTooltip />
+                      <Legend />
+                      <Line 
+                        yAxisId="left"
+                        type="monotone" 
+                        dataKey="ganhoPerPeca" 
+                        stroke="#1976d2" 
+                        name="Ganho por Peça" 
+                      />
+                      <Line 
+                        yAxisId="right"
+                        type="monotone" 
+                        dataKey="produtividade" 
+                        stroke="#ff7300" 
+                        name="Ganho em Produtividade (%)" 
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
+          </Box>
+        </Box>
+
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+          <DialogTitle>{editIndex !== null ? 'Editar Dados' : 'Adicionar Novos Dados'}</DialogTitle>
+          <DialogContent>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Produto"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Responsável"
+                  name="responsavel"
+                  value={formData.responsavel}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    name="status"
+                    value={formData.status}
+                    label="Status"
+                    onChange={handleInputChange}
+                  >
+                    <MenuItem value="Implementado">Implementado</MenuItem>
+                    <MenuItem value="Em Andamento">Em Andamento</MenuItem>
+                    <MenuItem value="Pendente">Pendente</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Revisão"
+                  name="revisao"
+                  value={formData.revisao}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Família"
+                  name="familia"
+                  value={formData.familia}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Valores Antigos</Typography>
+                <Divider />
+              </Grid>
+
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="UPH Antigo"
+                  name="uphAntigo"
+                  value={formData.uphAntigo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="HC Antigo"
+                  name="hcAntigo"
+                  value={formData.hcAntigo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="TP Antigo"
+                  name="tpAntigo"
+                  value={formData.tpAntigo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Custo Antigo"
+                  name="custoAntigo"
+                  value={formData.custoAntigo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="UPPH Antigo"
+                  name="upphAntigo"
+                  value={formData.upphAntigo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Valores Novos</Typography>
+                <Divider />
+              </Grid>
+
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="UPH Novo"
+                  name="uphNovo"
+                  value={formData.uphNovo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="HC Novo"
+                  name="hcNovo"
+                  value={formData.hcNovo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="TP Novo"
+                  name="tpNovo"
+                  value={formData.tpNovo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Custo Novo"
+                  name="custoNovo"
+                  value={formData.custoNovo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={2.4}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="UPPH Novo"
+                  name="upphNovo"
+                  value={formData.upphNovo}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancelar</Button>
+            <Button onClick={handleSubmit} variant="contained">
+              {editIndex !== null ? 'Atualizar' : 'Adicionar'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </ThemeProvider>
   )
