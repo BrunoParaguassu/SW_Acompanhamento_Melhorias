@@ -257,6 +257,14 @@ function App() {
     return (totalGain / data.length).toFixed(1)
   }
 
+  const calculateTotalGain = () => {
+    const totalGain = data.reduce((total, item) => {
+      const gain = item.custoAntigo - item.custoNovo
+      return total + gain
+    }, 0)
+    return totalGain.toFixed(2)
+  }
+
   const generateUPHTicks = () => {
     if (data.length === 0) return [0, 10, 20, 30, 40, 50]
     
@@ -344,11 +352,11 @@ function App() {
             </Box>
           </Box>
 
-          <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+          <Container maxWidth={false} sx={{ mt: 2, px: 0 }}>
+            <Grid container spacing={2}>
               {/* Cards de Métricas */}
-              <Grid item xs={12} md={4}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
+              <Grid item xs={12} md={3}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
                   <Typography variant="h6" gutterBottom>
                     Redução Total de HC
                   </Typography>
@@ -358,8 +366,8 @@ function App() {
                 </Paper>
               </Grid>
 
-              <Grid item xs={12} md={4}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
+              <Grid item xs={12} md={3}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
                   <Typography variant="h6" gutterBottom>
                     Redução Média de TP
                   </Typography>
@@ -369,8 +377,8 @@ function App() {
                 </Paper>
               </Grid>
 
-              <Grid item xs={12} md={4}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
+              <Grid item xs={12} md={3}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
                   <Typography variant="h6" gutterBottom>
                     Ganho Total em UPPH
                   </Typography>
@@ -380,9 +388,20 @@ function App() {
                 </Paper>
               </Grid>
 
+              <Grid item xs={12} md={3}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3, bgcolor: '#e3f2fd' }}>
+                  <Typography variant="h6" gutterBottom>
+                    Ganho Total em R$
+                  </Typography>
+                  <Typography variant="h3" color="primary" sx={{ mt: 2 }}>
+                    {calculateTotalGain()}
+                  </Typography>
+                </Paper>
+              </Grid>
+
               {/* Gráficos */}
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3 }}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo UPH
                   </Typography>
@@ -392,8 +411,8 @@ function App() {
                       data={data}
                       margin={{
                         top: 5,
-                        right: 30,
-                        left: 20,
+                        right: 0,
+                        left: 0,
                         bottom: 100
                       }}
                       barGap={0}
@@ -425,7 +444,7 @@ function App() {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3 }}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Ganhos por Produto
                   </Typography>
@@ -495,7 +514,7 @@ function App() {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3 }}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo Tempo Padrão (TP)
                   </Typography>
@@ -505,8 +524,8 @@ function App() {
                       data={data}
                       margin={{
                         top: 5,
-                        right: 30,
-                        left: 20,
+                        right: 0,
+                        left: 0,
                         bottom: 100
                       }}
                       barGap={0}
@@ -543,7 +562,7 @@ function App() {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3, height: '100%', boxShadow: 3 }}>
+                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo Headcount
                   </Typography>
@@ -553,8 +572,8 @@ function App() {
                       data={data}
                       margin={{
                         top: 5,
-                        right: 30,
-                        left: 20,
+                        right: 0,
+                        left: 0,
                         bottom: 100
                       }}
                       barGap={0}
@@ -584,57 +603,60 @@ function App() {
                   </ResponsiveContainer>
                 </Paper>
               </Grid>
+
+              {/* Tabela de Cadastro */}
+              <Grid item xs={12} sx={{ mt: 3 }}>
+                <Paper sx={{ width: '100%', mb: 2 }}>
+                  <TableContainer component={Paper} sx={{ 
+                    maxHeight: '300px',
+                    overflow: 'auto'
+                  }}>
+                    <Table size="small" stickyHeader>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Produto</TableCell>
+                          <TableCell>Responsável</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Revisão</TableCell>
+                          <TableCell>UPH (Antigo/Novo)</TableCell>
+                          <TableCell>HC (Antigo/Novo)</TableCell>
+                          <TableCell>Ganho por Peça</TableCell>
+                          <TableCell>Produtividade</TableCell>
+                          <TableCell>Ações</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {data.map((row, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{row.name}</TableCell>
+                            <TableCell>{row.responsavel}</TableCell>
+                            <TableCell>{row.status}</TableCell>
+                            <TableCell>{row.revisao}</TableCell>
+                            <TableCell>{row.uphAntigo} / {row.uphNovo}</TableCell>
+                            <TableCell>{row.hcAntigo} / {row.hcNovo}</TableCell>
+                            <TableCell>{row.ganhoPerPeca}</TableCell>
+                            <TableCell>{row.produtividade}%</TableCell>
+                            <TableCell>
+                              <Tooltip title="Editar">
+                                <IconButton size="small" onClick={() => handleEdit(index)}>
+                                  <EditIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Excluir">
+                                <IconButton size="small" onClick={() => handleDelete(index)}>
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Paper>
+              </Grid>
             </Grid>
           </Container>
-
-          <Box sx={{ mx: 2, mb: 4 }}>
-            <TableContainer component={Paper} sx={{ 
-              maxHeight: '300px',
-              overflow: 'auto'
-            }}>
-              <Table size="small" stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Produto</TableCell>
-                    <TableCell>Responsável</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Revisão</TableCell>
-                    <TableCell>UPH (Antigo/Novo)</TableCell>
-                    <TableCell>HC (Antigo/Novo)</TableCell>
-                    <TableCell>Ganho por Peça</TableCell>
-                    <TableCell>Produtividade</TableCell>
-                    <TableCell>Ações</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.responsavel}</TableCell>
-                      <TableCell>{row.status}</TableCell>
-                      <TableCell>{row.revisao}</TableCell>
-                      <TableCell>{row.uphAntigo} / {row.uphNovo}</TableCell>
-                      <TableCell>{row.hcAntigo} / {row.hcNovo}</TableCell>
-                      <TableCell>{row.ganhoPerPeca}</TableCell>
-                      <TableCell>{row.produtividade}%</TableCell>
-                      <TableCell>
-                        <Tooltip title="Editar">
-                          <IconButton size="small" onClick={() => handleEdit(index)}>
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Excluir">
-                          <IconButton size="small" onClick={() => handleDelete(index)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
 
           <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle>{editIndex !== null ? 'Editar Dados' : 'Adicionar Novos Dados'}</DialogTitle>
