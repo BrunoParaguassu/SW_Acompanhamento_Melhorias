@@ -38,7 +38,9 @@ import {
   Legend, 
   LineChart, 
   Line,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Cell,
+  LabelList
 } from 'recharts'
 import Plot from 'react-plotly.js'
 import AddIcon from '@mui/icons-material/Add'
@@ -441,13 +443,13 @@ function App() {
                     <BarChart
                       data={data}
                       margin={{
-                        top: 5,
-                        right: 0,
-                        left: 0,
+                        top: 20,
+                        right: 30,
+                        left: 20,
                         bottom: 100
                       }}
-                      barGap={0}
-                      maxBarSize={50}
+                      barGap={15}
+                      maxBarSize={40}
                     >
                       <defs>
                         <linearGradient id="colorUphNovo" x1="0" y1="0" x2="0" y2="1">
@@ -496,13 +498,41 @@ function App() {
                         name="UPH Novo" 
                         fill="url(#colorUphNovo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorUphNovo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="uphNovo" 
+                          position="top" 
+                          style={{ 
+                            fill: '#1976d2',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                       <Bar 
                         dataKey="uphAntigo" 
                         name="UPH Antigo" 
                         fill="url(#colorUphAntigo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorUphAntigo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="uphAntigo" 
+                          position="top" 
+                          style={{ 
+                            fill: '#82ca9d',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -643,13 +673,13 @@ function App() {
                     <BarChart
                       data={data}
                       margin={{
-                        top: 5,
-                        right: 0,
-                        left: 0,
+                        top: 20,
+                        right: 30,
+                        left: 20,
                         bottom: 100
                       }}
-                      barGap={0}
-                      maxBarSize={50}
+                      barGap={15}
+                      maxBarSize={40}
                     >
                       <defs>
                         <linearGradient id="colorTpNovo" x1="0" y1="0" x2="0" y2="1">
@@ -687,10 +717,7 @@ function App() {
                           borderRadius: '8px',
                           boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
                         }}
-                        formatter={(value, name) => [
-                          `${(value * 60).toFixed(2)} min`,
-                          name.replace('tp', 'TP ')
-                        ]}
+                        formatter={(value) => [`${(value * 60).toFixed(2)} min`]}
                       />
                       <Legend 
                         wrapperStyle={{
@@ -702,13 +729,43 @@ function App() {
                         name="TP Novo" 
                         fill="url(#colorTpNovo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorTpNovo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="tpNovo" 
+                          position="top" 
+                          formatter={(value) => `${(value * 60).toFixed(1)}`}
+                          style={{ 
+                            fill: '#1976d2',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                       <Bar 
                         dataKey="tpAntigo" 
                         name="TP Antigo" 
                         fill="url(#colorTpAntigo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorTpAntigo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="tpAntigo" 
+                          position="top" 
+                          formatter={(value) => `${(value * 60).toFixed(1)}`}
+                          style={{ 
+                            fill: '#82ca9d',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -792,13 +849,41 @@ function App() {
                         name="HC Novo" 
                         fill="url(#colorHcNovo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorHcNovo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="hcNovo" 
+                          position="top" 
+                          style={{ 
+                            fill: '#1976d2',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                       <Bar 
                         dataKey="hcAntigo" 
                         name="HC Antigo" 
                         fill="url(#colorHcAntigo)"
                         radius={[4, 4, 0, 0]}
-                      />
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorHcAntigo)" />
+                        ))}
+                        <LabelList 
+                          dataKey="hcAntigo" 
+                          position="top" 
+                          style={{ 
+                            fill: '#82ca9d',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
