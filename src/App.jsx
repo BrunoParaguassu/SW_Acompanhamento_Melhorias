@@ -40,6 +40,7 @@ import {
   Line,
   ResponsiveContainer
 } from 'recharts'
+import Plot from 'react-plotly.js'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -418,7 +419,20 @@ function App() {
 
               {/* Gráficos */}
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
+                <Paper 
+                  sx={{ 
+                    p: 2, 
+                    height: '100%', 
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%)',
+                    borderRadius: '16px',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo UPH
                   </Typography>
@@ -435,7 +449,17 @@ function App() {
                       barGap={0}
                       maxBarSize={50}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <defs>
+                        <linearGradient id="colorUphNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1976d2" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
+                        </linearGradient>
+                        <linearGradient id="colorUphAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
                       <XAxis
                         dataKey="name"
                         interval={0}
@@ -443,25 +467,62 @@ function App() {
                         textAnchor="end"
                         height={100}
                         tick={{ fontSize: 12 }}
+                        stroke="#666"
                       />
                       <YAxis
                         label={{
                           value: 'UPH',
                           angle: -90,
-                          position: 'insideLeft'
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' }
+                        }}
+                        stroke="#666"
+                      />
+                      <RechartsTooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: 'none',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
                         }}
                       />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Bar dataKey="uphNovo" name="UPH Novo" fill="#1976d2" />
-                      <Bar dataKey="uphAntigo" name="UPH Antigo" fill="#82ca9d" />
+                      <Legend 
+                        wrapperStyle={{
+                          paddingTop: '20px'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="uphNovo" 
+                        name="UPH Novo" 
+                        fill="url(#colorUphNovo)"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar 
+                        dataKey="uphAntigo" 
+                        name="UPH Antigo" 
+                        fill="url(#colorUphAntigo)"
+                        radius={[4, 4, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
+                <Paper 
+                  sx={{ 
+                    p: 2, 
+                    height: '100%', 
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%)',
+                    borderRadius: '16px',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Ganhos por Produto
                   </Typography>
@@ -476,7 +537,17 @@ function App() {
                         bottom: 100
                       }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <defs>
+                        <linearGradient id="colorGanho" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1976d2" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
+                        </linearGradient>
+                        <linearGradient id="colorProdutividade" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#ff7300" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#ff7300" stopOpacity={0.6}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
                       <XAxis
                         dataKey="name"
                         interval={0}
@@ -484,14 +555,17 @@ function App() {
                         textAnchor="end"
                         height={100}
                         tick={{ fontSize: 12 }}
+                        stroke="#666"
                       />
                       <YAxis
                         yAxisId="left"
                         label={{
                           value: 'Ganho por Peça (R$)',
                           angle: -90,
-                          position: 'insideLeft'
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' }
                         }}
+                        stroke="#666"
                       />
                       <YAxis
                         yAxisId="right"
@@ -499,31 +573,47 @@ function App() {
                         label={{
                           value: 'Produtividade (%)',
                           angle: 90,
-                          position: 'insideRight'
+                          position: 'insideRight',
+                          style: { textAnchor: 'middle' }
                         }}
+                        stroke="#666"
                       />
                       <RechartsTooltip
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: 'none',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+                        }}
                         formatter={(value, name) => [
                           name === 'Ganho por Peça' ? `R$ ${value.toFixed(2)}` : `${value.toFixed(1)}%`,
                           name
                         ]}
                       />
-                      <Legend />
+                      <Legend
+                        wrapperStyle={{
+                          paddingTop: '20px'
+                        }}
+                      />
                       <Line
                         yAxisId="left"
                         type="monotone"
                         dataKey="ganhoPerPeca"
                         name="Ganho por Peça"
-                        stroke="#1976d2"
-                        strokeWidth={2}
+                        stroke="url(#colorGanho)"
+                        strokeWidth={3}
+                        dot={{ stroke: '#1976d2', strokeWidth: 2, r: 4, fill: '#fff' }}
+                        activeDot={{ r: 8, strokeWidth: 0, fill: '#1976d2' }}
                       />
                       <Line
                         yAxisId="right"
                         type="monotone"
                         dataKey="produtividade"
                         name="Produtividade"
-                        stroke="#ff7300"
-                        strokeWidth={2}
+                        stroke="url(#colorProdutividade)"
+                        strokeWidth={3}
+                        dot={{ stroke: '#ff7300', strokeWidth: 2, r: 4, fill: '#fff' }}
+                        activeDot={{ r: 8, strokeWidth: 0, fill: '#ff7300' }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -531,7 +621,20 @@ function App() {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
+                <Paper 
+                  sx={{ 
+                    p: 2, 
+                    height: '100%', 
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%)',
+                    borderRadius: '16px',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo Tempo Padrão (TP)
                   </Typography>
@@ -548,7 +651,17 @@ function App() {
                       barGap={0}
                       maxBarSize={50}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <defs>
+                        <linearGradient id="colorTpNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1976d2" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
+                        </linearGradient>
+                        <linearGradient id="colorTpAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
                       <XAxis
                         dataKey="name"
                         interval={0}
@@ -556,30 +669,66 @@ function App() {
                         textAnchor="end"
                         height={100}
                         tick={{ fontSize: 12 }}
+                        stroke="#666"
                       />
                       <YAxis
                         label={{
                           value: 'Tempo (min)',
                           angle: -90,
-                          position: 'insideLeft'
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' }
                         }}
+                        stroke="#666"
                       />
                       <RechartsTooltip
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: 'none',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+                        }}
                         formatter={(value, name) => [
                           `${(value * 60).toFixed(2)} min`,
                           name.replace('tp', 'TP ')
                         ]}
                       />
-                      <Legend />
-                      <Bar dataKey="tpNovo" name="TP Novo" fill="#1976d2" />
-                      <Bar dataKey="tpAntigo" name="TP Antigo" fill="#82ca9d" />
+                      <Legend 
+                        wrapperStyle={{
+                          paddingTop: '20px'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="tpNovo" 
+                        name="TP Novo" 
+                        fill="url(#colorTpNovo)"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar 
+                        dataKey="tpAntigo" 
+                        name="TP Antigo" 
+                        fill="url(#colorTpAntigo)"
+                        radius={[4, 4, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%', boxShadow: 3 }}>
+                <Paper 
+                  sx={{ 
+                    p: 2, 
+                    height: '100%', 
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%)',
+                    borderRadius: '16px',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 12px 40px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
                     Comparativo Headcount
                   </Typography>
@@ -596,7 +745,17 @@ function App() {
                       barGap={0}
                       maxBarSize={50}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <defs>
+                        <linearGradient id="colorHcNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1976d2" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
+                        </linearGradient>
+                        <linearGradient id="colorHcAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
                       <XAxis
                         dataKey="name"
                         interval={0}
@@ -604,18 +763,42 @@ function App() {
                         textAnchor="end"
                         height={100}
                         tick={{ fontSize: 12 }}
+                        stroke="#666"
                       />
                       <YAxis
                         label={{
                           value: 'Headcount',
                           angle: -90,
-                          position: 'insideLeft'
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' }
+                        }}
+                        stroke="#666"
+                      />
+                      <RechartsTooltip
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: 'none',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
                         }}
                       />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Bar dataKey="hcNovo" name="HC Novo" fill="#1976d2" />
-                      <Bar dataKey="hcAntigo" name="HC Antigo" fill="#82ca9d" />
+                      <Legend 
+                        wrapperStyle={{
+                          paddingTop: '20px'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="hcNovo" 
+                        name="HC Novo" 
+                        fill="url(#colorHcNovo)"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar 
+                        dataKey="hcAntigo" 
+                        name="HC Antigo" 
+                        fill="url(#colorHcAntigo)"
+                        radius={[4, 4, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>

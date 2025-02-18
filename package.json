@@ -39,8 +39,10 @@
     "@mui/x-data-grid-premium": "^7.27.0",
     "@mui/x-data-grid-pro": "^7.27.0",
     "papaparse": "^5.4.1",
+    "plotly.js": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-plotly.js": "^2.6.0",
     "recharts": "^2.12.0"
   },
   "devDependencies": {
