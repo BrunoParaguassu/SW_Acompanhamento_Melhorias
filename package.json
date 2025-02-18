@@ -2,6 +2,10 @@
   "name": "sw-graficos",
   "private": true,
   "version": "1.0.0",
+  "description": "Dashboard para acompanhamento de melhorias de processo",
+  "author": {
+    "name": "Bruno Paraguassu"
+  },
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -10,54 +14,44 @@
     "preview": "vite preview",
     "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
     "electron:build": "npm run build && electron-builder",
-    "electron:package": "electron-builder -w"
+    "electron:package": "npm run build && electron-builder --win portable --config.win.signAndEditExecutable=false"
   },
   "build": {
     "appId": "com.swgraficos.app",
     "productName": "SW Gráficos",
-    "directories": {
-      "output": "release"
-    },
     "files": [
       "dist/**/*",
       "electron/**/*"
     ],
     "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "public/icon.ico"
+      "target": "portable"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
+    "directories": {
+      "output": "release"
     }
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.4",
-    "@mui/material": "^6.4.4",
-    "papaparse": "^5.5.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "recharts": "^2.15.1"
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.10",
+    "@mui/material": "^5.15.10",
+    "papaparse": "^5.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.12.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
     "electron": "^28.3.3",
     "electron-builder": "^24.13.3",
     "electron-is-dev": "^2.0.0",
-    "eslint": "^9.19.0",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.18",
-    "globals": "^15.14.0",
-    "vite": "^6.1.0"
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "vite": "^5.1.0"
   }
 }
