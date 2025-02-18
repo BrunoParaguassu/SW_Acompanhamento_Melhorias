@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   DialogActions,
   FormControl,
   InputLabel,
@@ -160,6 +161,8 @@ function App() {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState(initialFormState)
   const [editIndex, setEditIndex] = useState(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteIndex, setDeleteIndex] = useState(null)
   const fileInputRef = useRef(null)
 
   useEffect(() => {
@@ -187,10 +190,24 @@ function App() {
     setOpen(true)
   }
 
-  const handleDelete = (index) => {
-    const newData = data.filter((_, i) => i !== index)
-    setData(newData)
-    saveDataToLocalStorage(newData)
+  const handleDeleteClick = (index) => {
+    setDeleteIndex(index)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (deleteIndex !== null) {
+      const newData = data.filter((_, i) => i !== deleteIndex)
+      setData(newData)
+      saveDataToLocalStorage(newData)
+      setDeleteDialogOpen(false)
+      setDeleteIndex(null)
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false)
+    setDeleteIndex(null)
   }
 
   const handleInputChange = (e) => {
@@ -643,7 +660,7 @@ function App() {
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title="Excluir">
-                                <IconButton size="small" onClick={() => handleDelete(index)}>
+                                <IconButton size="small" onClick={() => handleDeleteClick(index)}>
                                   <DeleteIcon />
                                 </IconButton>
                               </Tooltip>
@@ -657,6 +674,28 @@ function App() {
               </Grid>
             </Grid>
           </Container>
+
+          <Dialog
+            open={deleteDialogOpen}
+            onClose={handleDeleteCancel}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Confirmar Exclusão"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDeleteCancel}>Cancelar</Button>
+              <Button onClick={handleDeleteConfirm} autoFocus color="error">
+                Excluir
+              </Button>
+            </DialogActions>
+          </Dialog>
 
           <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle>{editIndex !== null ? 'Editar Dados' : 'Adicionar Novos Dados'}</DialogTitle>
