@@ -9,25 +9,28 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && electron-builder",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
-    "electron:build": "npm run build && electron-builder",
+    "electron:dev": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"electron .\"",
     "electron:package": "npm run build && electron-builder --win portable --config.win.signAndEditExecutable=false"
   },
   "build": {
-    "appId": "com.swgraficos.app",
+    "appId": "com.sw.graficos",
     "productName": "SW Gráficos",
+    "win": {
+      "target": ["portable"],
+      "artifactName": "${productName}-${version}.exe"
+    },
+    "directories": {
+      "output": "dist"
+    },
     "files": [
       "dist/**/*",
       "electron/**/*"
     ],
-    "win": {
-      "target": "portable"
-    },
-    "directories": {
-      "output": "release"
+    "portable": {
+      "splashImage": false
     }
   },
   "dependencies": {
@@ -35,24 +38,19 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
-    "@mui/x-data-grid": "^7.27.0",
-    "@mui/x-data-grid-premium": "^7.27.0",
-    "@mui/x-data-grid-pro": "^7.27.0",
     "papaparse": "^5.4.1",
-    "plotly.js": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-plotly.js": "^2.6.0",
-    "recharts": "^2.12.0"
+    "recharts": "^2.12.0",
+    "v8-compile-cache": "^2.4.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "^28.3.3",
     "electron-builder": "^24.13.3",
-    "electron-is-dev": "^2.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

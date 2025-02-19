@@ -12,10 +12,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -26,7 +22,11 @@ import {
   Tooltip,
   ThemeProvider,
   createTheme,
-  Divider
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
 import { 
   BarChart, 
@@ -42,7 +42,6 @@ import {
   Cell,
   LabelList
 } from 'recharts'
-import Plot from 'react-plotly.js'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'

@@ -33,18 +33,18 @@ export const loadDataFromCSV = () => {
 
 export const importCSVFile = (file) => {
   return new Promise((resolve, reject) => {
+    const chunks = [];
     Papa.parse(file, {
       header: true,
       dynamicTyping: true,
-      complete: (results) => {
-        if (results.data) {
-          localStorage.setItem('dashboardData', Papa.unparse(results.data));
-          resolve(results.data);
-        }
+      chunk: (results) => {
+        chunks.push(...results.data);
       },
-      error: (error) => {
-        reject(error);
-      }
+      complete: () => {
+        localStorage.setItem('dashboardData', Papa.unparse(chunks));
+        resolve(chunks);
+      },
+      error: reject
     });
   });
 }
