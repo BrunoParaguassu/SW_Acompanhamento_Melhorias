@@ -435,7 +435,7 @@ function App() {
                   }}
                 >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo UPH
+                    UPH
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -445,9 +445,9 @@ function App() {
                         top: 20,
                         right: 30,
                         left: 20,
-                        bottom: 100
+                        bottom: 50
                       }}
-                      barGap={15}
+                      barGap={10}
                       maxBarSize={40}
                     >
                       <defs>
@@ -456,8 +456,8 @@ function App() {
                           <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
                         </linearGradient>
                         <linearGradient id="colorUphAntigo" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
-                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                          <stop offset="5%" stopColor="#ff7300" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#ff7300" stopOpacity={0.6}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
@@ -505,7 +505,7 @@ function App() {
                           dataKey="uphNovo" 
                           position="top" 
                           style={{ 
-                            fill: '#1976d2',
+                            fill: '#1976d8',
                             fontSize: '12px',
                             fontWeight: 'bold'
                           }}
@@ -553,18 +553,20 @@ function App() {
                   }}
                 >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Ganhos por Produto
+                    Produto
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
-                    <LineChart 
+                    <BarChart
                       data={data}
                       margin={{
-                        top: 5,
+                        top: 20,
                         right: 30,
                         left: 20,
-                        bottom: 100
+                        bottom: 50
                       }}
+                      barGap={10}
+                      maxBarSize={40}
                     >
                       <defs>
                         <linearGradient id="colorGanho" x1="0" y1="0" x2="0" y2="1">
@@ -624,27 +626,51 @@ function App() {
                           paddingTop: '20px'
                         }}
                       />
-                      <Line
+                      <Bar
                         yAxisId="left"
-                        type="monotone"
                         dataKey="ganhoPerPeca"
                         name="Ganho por Peça"
-                        stroke="url(#colorGanho)"
-                        strokeWidth={3}
-                        dot={{ stroke: '#1976d2', strokeWidth: 2, r: 4, fill: '#fff' }}
-                        activeDot={{ r: 8, strokeWidth: 0, fill: '#1976d2' }}
-                      />
-                      <Line
+                        fill="url(#colorGanho)"
+                        radius={[4, 4, 0, 0]}
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorGanho)" />
+                        ))}
+                        <LabelList 
+                          dataKey="ganhoPerPeca" 
+                          position="top" 
+                          formatter={(value) => `R$ ${value.toFixed(2)}`}
+                          style={{ 
+                            fill: '#1976d2',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
+                      <Bar
                         yAxisId="right"
-                        type="monotone"
                         dataKey="produtividade"
                         name="Produtividade"
-                        stroke="url(#colorProdutividade)"
-                        strokeWidth={3}
-                        dot={{ stroke: '#ff7300', strokeWidth: 2, r: 4, fill: '#fff' }}
-                        activeDot={{ r: 8, strokeWidth: 0, fill: '#ff7300' }}
-                      />
-                    </LineChart>
+                        fill="url(#colorProdutividade)"
+                        radius={[4, 4, 0, 0]}
+                      >
+                        {data.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorProdutividade)" />
+                        ))}
+                        <LabelList 
+                          dataKey="produtividade" 
+                          position="top" 
+                          formatter={(value) => `${value.toFixed(1)}%`}
+                          style={{ 
+                            fill: '#ff7300',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}
+                          offset={10}
+                        />
+                      </Bar>
+                    </BarChart>
                   </ResponsiveContainer>
                 </Paper>
               </Grid>
@@ -665,7 +691,7 @@ function App() {
                   }}
                 >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo Tempo Padrão (TP)
+                    Tempo Padrão (TP)
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -675,9 +701,9 @@ function App() {
                         top: 20,
                         right: 30,
                         left: 20,
-                        bottom: 100
+                        bottom: 50
                       }}
-                      barGap={15}
+                      barGap={10}
                       maxBarSize={40}
                     >
                       <defs>
@@ -686,8 +712,8 @@ function App() {
                           <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
                         </linearGradient>
                         <linearGradient id="colorTpAntigo" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
-                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                          <stop offset="5%" stopColor="#ff7300" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#ff7300" stopOpacity={0.6}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
@@ -786,20 +812,20 @@ function App() {
                   }}
                 >
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo Headcount
+                    Headcount
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
                       data={data}
                       margin={{
-                        top: 5,
-                        right: 0,
-                        left: 0,
-                        bottom: 100
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 50
                       }}
-                      barGap={0}
-                      maxBarSize={50}
+                      barGap={10}
+                      maxBarSize={40}
                     >
                       <defs>
                         <linearGradient id="colorHcNovo" x1="0" y1="0" x2="0" y2="1">
@@ -807,8 +833,8 @@ function App() {
                           <stop offset="95%" stopColor="#1976d2" stopOpacity={0.6}/>
                         </linearGradient>
                         <linearGradient id="colorHcAntigo" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.9}/>
-                          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.6}/>
+                          <stop offset="5%" stopColor="#ff7300" stopOpacity={0.9}/>
+                          <stop offset="95%" stopColor="#ff7300" stopOpacity={0.6}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
