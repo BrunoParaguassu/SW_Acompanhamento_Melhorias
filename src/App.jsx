@@ -26,7 +26,10 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Snackbar,
+  Alert,
+  CircularProgress
 } from '@mui/material'
 import { 
   BarChart, 
@@ -60,13 +63,62 @@ const theme = createTheme({
     mode: 'light',
     primary: {
       main: '#1976d2',
+      light: '#42a5f5',
+      dark: '#1565c0'
     },
     secondary: {
       main: '#dc004e',
+      light: '#ff4081',
+      dark: '#c51162'
     },
     background: {
       default: '#f5f5f5',
       paper: '#ffffff'
+    },
+    typography: {
+      h4: {
+        fontWeight: 600,
+        letterSpacing: '0.5px'
+      },
+      h6: {
+        fontWeight: 500,
+        letterSpacing: '0.25px'
+      }
+    },
+    components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            transition: 'all 0.3s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.12)'
+            }
+          }
+        }
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            textTransform: 'none',
+            fontWeight: 500,
+            transition: 'all 0.2s',
+            '&:hover': {
+              transform: 'translateY(-1px)'
+            }
+          }
+        }
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: '0.875rem',
+            padding: '8px 12px',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)'
+          }
+        }
+      }
     }
   }
 })
@@ -104,6 +156,12 @@ const initialFormState = {
 }
 
 function App() {
+  const [loading, setLoading] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  })
   const [data, setData] = useState([
     {
       Item: '',
@@ -315,25 +373,42 @@ function App() {
     }
   }
 
-  const handleSubmit = () => {
-    const gains = calculateGains()
-    const newData = {
-      ...formData,
-      'GANHO Por Peça': gains.custoGain.toFixed(2),
-      Produtividade: gains.produtividadeGain.toFixed(2)
-    }
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      const gains = calculateGains()
+      const newData = {
+        ...formData,
+        'GANHO Por Peça': gains.custoGain.toFixed(2),
+        Produtividade: gains.produtividadeGain.toFixed(2)
+      }
 
-    let updatedData
-    if (editIndex !== null) {
-      updatedData = [...data]
-      updatedData[editIndex] = newData
-    } else {
-      updatedData = [...data, newData]
+      let updatedData
+      if (editIndex !== null) {
+        updatedData = [...data]
+        updatedData[editIndex] = newData
+      } else {
+        updatedData = [...data, newData]
+      }
+      
+      setData(updatedData)
+      saveDataToLocalStorage(updatedData)
+      handleClose()
+      setSnackbar({
+        open: true,
+        message: editIndex !== null ? 'Dados atualizados com sucesso!' : 'Dados adicionados com sucesso!',
+        severity: 'success'
+      })
+    } catch (error) {
+      console.error('Erro ao salvar dados:', error)
+      setSnackbar({
+        open: true,
+        message: 'Erro ao salvar os dados. Tente novamente.',
+        severity: 'error'
+      })
+    } finally {
+      setLoading(false)
     }
-    
-    setData(updatedData)
-    saveDataToLocalStorage(updatedData)
-    handleClose()
   }
 
   const handleSaveToFile = () => {
@@ -421,15 +496,26 @@ function App() {
   const handleImportCSV = async (event) => {
     const file = event.target.files[0]
     if (file) {
+      setLoading(true)
       try {
         const importedData = await importCSVFile(file)
         setData(importedData)
+        setSnackbar({
+          open: true,
+          message: 'Arquivo importado com sucesso!',
+          severity: 'success'
+        })
       } catch (error) {
         console.error('Erro ao importar arquivo:', error)
-        alert('Erro ao importar o arquivo. Verifique se o formato está correto.')
+        setSnackbar({
+          open: true,
+          message: 'Erro ao importar o arquivo. Verifique se o formato está correto.',
+          severity: 'error'
+        })
+      } finally {
+        setLoading(false)
       }
     }
-    // Limpa o input para permitir selecionar o mesmo arquivo novamente
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -438,6 +524,68 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+        {loading && (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 9999
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+        {loading && (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 9999
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
         <Box sx={{ p: 2 }}>
           <Box sx={{ 
             display: 'flex', 
@@ -561,8 +709,22 @@ function App() {
                       <YAxis label={{ value: 'UPH', angle: -90, position: 'insideLeft' }} />
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
-                      <Bar dataKey="UPH Antigo" fill="#ff7300" name="UPH Antigo" />
-                      <Bar dataKey="UPH Novo" fill="#1976d2" name="UPH Novo" />
+                      <Bar dataKey="UPH Antigo" fill="url(#colorUphAntigo)" name="UPH Antigo">
+                        <LabelList dataKey="UPH Antigo" position="top" formatter={(value) => value.toFixed(1)} />
+                      </Bar>
+                      <Bar dataKey="UPH Novo" fill="url(#colorUphNovo)" name="UPH Novo">
+                        <LabelList dataKey="UPH Novo" position="top" formatter={(value) => value.toFixed(1)} />
+                      </Bar>
+                      <defs>
+                        <linearGradient id="colorUphAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#ff7300" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#ff7300" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorUphNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1976d2" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#1976d2" stopOpacity={0.3}/>
+                        </linearGradient>
+                      </defs>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -598,8 +760,22 @@ function App() {
                       <YAxis label={{ value: 'HC', angle: -90, position: 'insideLeft' }} />
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
-                      <Bar dataKey="HC Antigo" fill="#ff9800" name="HC Antigo" />
-                      <Bar dataKey="HC Novo" fill="#2196f3" name="HC Novo" />
+                      <Bar dataKey="HC Antigo" fill="url(#colorHcAntigo)" name="HC Antigo">
+                        <LabelList dataKey="HC Antigo" position="top" formatter={(value) => value.toFixed(1)} />
+                      </Bar>
+                      <Bar dataKey="HC Novo" fill="url(#colorHcNovo)" name="HC Novo">
+                        <LabelList dataKey="HC Novo" position="top" formatter={(value) => value.toFixed(1)} />
+                      </Bar>
+                      <defs>
+                        <linearGradient id="colorHcAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#ff9800" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#ff9800" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorHcNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#2196f3" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#2196f3" stopOpacity={0.3}/>
+                        </linearGradient>
+                      </defs>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -634,8 +810,22 @@ function App() {
                       <YAxis label={{ value: 'TP', angle: -90, position: 'insideLeft' }} />
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
-                      <Bar dataKey="TP Antigo" fill="#ffc107" name="TP Antigo" />
-                      <Bar dataKey="TP Novo" fill="#4caf50" name="TP Novo" />
+                      <Bar dataKey="TP Antigo" fill="url(#colorTpAntigo)" name="TP Antigo">
+                        <LabelList dataKey="TP Antigo" position="top" formatter={(value) => value.toFixed(3)} />
+                      </Bar>
+                      <Bar dataKey="TP Novo" fill="url(#colorTpNovo)" name="TP Novo">
+                        <LabelList dataKey="TP Novo" position="top" formatter={(value) => value.toFixed(3)} />
+                      </Bar>
+                      <defs>
+                        <linearGradient id="colorTpAntigo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#ffc107" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#ffc107" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorTpNovo" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#4caf50" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#4caf50" stopOpacity={0.3}/>
+                        </linearGradient>
+                      </defs>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
