@@ -689,7 +689,7 @@ function App() {
                   borderRadius: '16px'
                 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo UPH
+                    UPH
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -710,10 +710,32 @@ function App() {
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
                       <Bar dataKey="UPH Antigo" fill="url(#colorUphAntigo)" name="UPH Antigo">
-                        <LabelList dataKey="UPH Antigo" position="top" formatter={(value) => value.toFixed(1)} />
+                        <LabelList 
+                          dataKey="UPH Antigo" 
+                          position="top" 
+                          formatter={(value) => value.toFixed(1)}
+                          offset={-15}
+                          fill="#000"
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 1px rgba(255,255,255,0.5)'
+                          }}
+                        />
                       </Bar>
                       <Bar dataKey="UPH Novo" fill="url(#colorUphNovo)" name="UPH Novo">
-                        <LabelList dataKey="UPH Novo" position="top" formatter={(value) => value.toFixed(1)} />
+                        <LabelList 
+                          dataKey="UPH Novo" 
+                          position="top" 
+                          formatter={(value) => value.toFixed(1)}
+                          offset={15}
+                          fill="#000"
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 1px rgba(255,255,255,0.5)'
+                          }}
+                        />
                       </Bar>
                       <defs>
                         <linearGradient id="colorUphAntigo" x1="0" y1="0" x2="0" y2="1">
@@ -740,7 +762,7 @@ function App() {
                   borderRadius: '16px'
                 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo HC
+                    HC
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -761,10 +783,10 @@ function App() {
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
                       <Bar dataKey="HC Antigo" fill="url(#colorHcAntigo)" name="HC Antigo">
-                        <LabelList dataKey="HC Antigo" position="top" formatter={(value) => value.toFixed(1)} />
+                        <LabelList dataKey="HC Antigo" position="top" formatter={(value) => value.toFixed(1)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <Bar dataKey="HC Novo" fill="url(#colorHcNovo)" name="HC Novo">
-                        <LabelList dataKey="HC Novo" position="top" formatter={(value) => value.toFixed(1)} />
+                        <LabelList dataKey="HC Novo" position="top" formatter={(value) => value.toFixed(1)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <defs>
                         <linearGradient id="colorHcAntigo" x1="0" y1="0" x2="0" y2="1">
@@ -791,7 +813,7 @@ function App() {
                   borderRadius: '16px'
                 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo TP
+                     TP
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -807,14 +829,34 @@ function App() {
                         height={100}
                         interval={0}
                       />
-                      <YAxis label={{ value: 'TP', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip formatter={(value) => value.toFixed(2)} />
+                      <YAxis 
+                        label={{ value: 'TP', angle: -90, position: 'insideLeft' }}
+                        tickFormatter={(value) => formatNumber(value)}
+                      />
+                      <Tooltip
+                        formatter={(value, name) => [
+                          formatNumber(value),
+                          name === 'TP Antigo' ? 'TP Antigo' : 'TP Novo'
+                        ]}
+                      />
                       <Legend />
                       <Bar dataKey="TP Antigo" fill="url(#colorTpAntigo)" name="TP Antigo">
-                        <LabelList dataKey="TP Antigo" position="top" formatter={(value) => value.toFixed(3)} />
+                        <LabelList
+                          dataKey="TP Antigo"
+                          position="top"
+                          formatter={(value) => formatNumber(value)}
+                          fill="#000000"
+                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '0px 0px 3px rgba(255,255,255,0.8)' }}
+                        />
                       </Bar>
                       <Bar dataKey="TP Novo" fill="url(#colorTpNovo)" name="TP Novo">
-                        <LabelList dataKey="TP Novo" position="top" formatter={(value) => value.toFixed(3)} />
+                        <LabelList
+                          dataKey="TP Novo"
+                          position="top"
+                          formatter={(value) => formatNumber(value)}
+                          fill="#000000"
+                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '0px 0px 3px rgba(255,255,255,0.8)' }}
+                        />
                       </Bar>
                       <defs>
                         <linearGradient id="colorTpAntigo" x1="0" y1="0" x2="0" y2="1">
@@ -841,7 +883,7 @@ function App() {
                   borderRadius: '16px'
                 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo Custo
+                    Custo
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -860,8 +902,12 @@ function App() {
                       <YAxis label={{ value: 'Custo (R$)', angle: -90, position: 'insideLeft' }} />
                       <Tooltip formatter={(value) => `R$ ${value.toFixed(2)}`} />
                       <Legend />
-                      <Bar dataKey="Custo Antigo" fill="#e91e63" name="Custo Antigo" />
-                      <Bar dataKey="Custo Novo" fill="#9c27b0" name="Custo Novo" />
+                      <Bar dataKey="Custo Antigo" fill="#e91e63" name="Custo Antigo">
+                        <LabelList dataKey="Custo Antigo" position="top" formatter={(value) => `R$ ${value.toFixed(2)}`} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                      </Bar>
+                      <Bar dataKey="Custo Novo" fill="#9c27b0" name="Custo Novo">
+                        <LabelList dataKey="Custo Novo" position="top" formatter={(value) => `R$ ${value.toFixed(2)}`} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -877,7 +923,7 @@ function App() {
                   borderRadius: '16px'
                 }}>
                   <Typography variant="h6" gutterBottom sx={{ fontWeight: 'medium' }}>
-                    Comparativo UPPH
+                    UPPH
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
@@ -896,8 +942,12 @@ function App() {
                       <YAxis label={{ value: 'UPPH', angle: -90, position: 'insideLeft' }} />
                       <Tooltip formatter={(value) => value.toFixed(2)} />
                       <Legend />
-                      <Bar dataKey="UPPH Antigo" fill="#795548" name="UPPH Antigo" />
-                      <Bar dataKey="UPPH Novo" fill="#607d8b" name="UPPH Novo" />
+                      <Bar dataKey="UPPH Antigo" fill="#795548" name="UPPH Antigo">
+                        <LabelList dataKey="UPPH Antigo" position="top" formatter={(value) => value.toFixed(2)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                      </Bar>
+                      <Bar dataKey="UPPH Novo" fill="#607d8b" name="UPPH Novo">
+                        <LabelList dataKey="UPPH Novo" position="top" formatter={(value) => value.toFixed(2)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -954,7 +1004,14 @@ function App() {
                         dataKey="GANHO Por Peça" 
                         fill="#00bcd4" 
                         name="Ganho por Peça"
-                      />
+                      >
+                        <LabelList 
+                          dataKey="GANHO Por Peça" 
+                          position="top"
+                          formatter={(value) => `R$ ${value.toFixed(2)}`}
+                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
+                        />
+                      </Bar>
                       <Line 
                         yAxisId="right"
                         type="monotone" 
@@ -963,7 +1020,14 @@ function App() {
                         strokeWidth={2}
                         name="% Melhoria Custo"
                         dot={{ fill: '#ff5722' }}
-                      />
+                      >
+                        <LabelList 
+                          dataKey="% Melhoria Custo" 
+                          position="top"
+                          formatter={(value) => `${value.toFixed(1)}%`}
+                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
+                        />
+                      </Line>
                       <Line 
                         yAxisId="right"
                         type="monotone" 
@@ -972,7 +1036,14 @@ function App() {
                         strokeWidth={2}
                         name="Produtividade"
                         dot={{ fill: '#8bc34a' }}
-                      />
+                      >
+                        <LabelList 
+                          dataKey="Produtividade" 
+                          position="top"
+                          formatter={(value) => `${value.toFixed(1)}%`}
+                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
+                        />
+                      </Line>
                     </ComposedChart>
                   </ResponsiveContainer>
                 </Paper>
@@ -996,7 +1067,7 @@ function App() {
                           <TableCell sx={{ width: '10%' }}>Responsável</TableCell>
                           <TableCell sx={{ width: '5%' }}>Status</TableCell>
                           <TableCell sx={{ width: '5%' }}>Revisão</TableCell>
-                          <TableCell sx={{ width: '5%' }}>Familia</TableCell>
+                          <TableCell sx={{ width: '2%' }}>Familia</TableCell>
                           <TableCell sx={{ width: '5%' }}>UPH Antigo</TableCell>
                           <TableCell sx={{ width: '5%' }}>HC Antigo</TableCell>
                           <TableCell sx={{ width: '5%' }}>TP Antigo</TableCell>
