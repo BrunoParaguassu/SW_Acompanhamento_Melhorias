@@ -521,6 +521,33 @@ function App() {
     }
   }
 
+  const temAlteracoesUPH = (produto) => {
+    return produto['UPH Antigo'] !== produto['UPH Novo'];
+  };
+
+  const temAlteracoesHC = (produto) => {
+    return produto['HC Antigo'] !== produto['HC Novo'];
+  };
+
+  const temAlteracoesTP = (produto) => {
+    return produto['TP Antigo'] !== produto['TP Novo'];
+  };
+
+  const temAlteracoesCusto = (produto) => {
+    return produto['Custo Antigo'] !== produto['Custo Novo'];
+  };
+
+  const temAlteracoesUPPH = (produto) => {
+    return produto['UPPH Antigo'] !== produto['UPPH Novo'];
+  };
+
+  // Dados filtrados para cada tipo de gráfico
+  const dadosFiltradosUPH = data.filter(temAlteracoesUPH);
+  const dadosFiltradosHC = data.filter(temAlteracoesHC);
+  const dadosFiltradosTP = data.filter(temAlteracoesTP);
+  const dadosFiltradosCusto = data.filter(temAlteracoesCusto);
+  const dadosFiltradosUPPH = data.filter(temAlteracoesUPPH);
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -694,7 +721,7 @@ function App() {
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                      data={data}
+                      data={dadosFiltradosUPH}
                       margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                       barGap={10}
                     >
@@ -767,7 +794,7 @@ function App() {
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                      data={data}
+                      data={dadosFiltradosHC}
                       margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                       barGap={10}
                     >
@@ -818,7 +845,7 @@ function App() {
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                      data={data}
+                      data={dadosFiltradosTP}
                       margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -888,7 +915,7 @@ function App() {
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                      data={data}
+                      data={dadosFiltradosCusto}
                       margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -928,7 +955,7 @@ function App() {
                   <Divider sx={{ mb: 2 }} />
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                      data={data}
+                      data={dadosFiltradosUPPH}
                       margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
