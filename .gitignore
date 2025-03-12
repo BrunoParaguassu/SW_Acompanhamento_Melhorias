@@ -25,3 +25,10 @@ dist-ssr
 
 # Electron build output
 /release
+/dist_electron
+/out
+
+# Environment variables
+.env
+.env.local
+.env.*.local
