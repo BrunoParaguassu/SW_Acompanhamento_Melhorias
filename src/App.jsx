@@ -30,7 +30,18 @@ import {
   Snackbar,
   Alert,
   CircularProgress
-} from '@mui/material'
+} from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import DescriptionIcon from '@mui/icons-material/Description';
+import StarIcon from '@mui/icons-material/Star';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import SpeedIcon from '@mui/icons-material/Speed';
+import PeopleIcon from '@mui/icons-material/People';
+import TimerIcon from '@mui/icons-material/Timer';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PersonIcon from '@mui/icons-material/Person';
 import { 
   BarChart, 
   Bar, 
@@ -541,6 +552,56 @@ function App() {
     return produto['UPPH Antigo'] !== produto['UPPH Novo'];
   };
 
+  // Filtra produtos que tiveram alguma melhoria
+  const produtosMelhoria = data
+    .filter(item => {
+      // Verifica se houve melhoria em qualquer aspecto
+      const melhoriaUPPH = Number(item['UPPH Novo']) > Number(item['UPPH Antigo']);
+      const melhoriaUPH = Number(item['UPH Novo']) > Number(item['UPH Antigo']);
+      const melhoriaHC = Number(item['HC Novo']) < Number(item['HC Antigo']); // Menor é melhor para HC
+      const melhoriaTP = Number(item['TP Novo']) < Number(item['TP Antigo']); // Menor é melhor para TP
+      const melhoriaCusto = Number(item['Custo Novo']) < Number(item['Custo Antigo']); // Menor é melhor para Custo
+      
+      return melhoriaUPPH || melhoriaUPH || melhoriaHC || melhoriaTP || melhoriaCusto;
+    })
+    .map(item => ({
+      ...item,
+      // Calcula os percentuais de melhoria
+      melhorias: {
+        UPPH: ((Number(item['UPPH Novo']) - Number(item['UPPH Antigo'])) / Number(item['UPPH Antigo']) * 100).toFixed(1),
+        UPH: ((Number(item['UPH Novo']) - Number(item['UPH Antigo'])) / Number(item['UPH Antigo']) * 100).toFixed(1),
+        HC: ((Number(item['HC Antigo']) - Number(item['HC Novo'])) / Number(item['HC Antigo']) * 100).toFixed(1),
+        TP: ((Number(item['TP Antigo']) - Number(item['TP Novo'])) / Number(item['TP Antigo']) * 100).toFixed(1),
+        Custo: ((Number(item['Custo Antigo']) - Number(item['Custo Novo'])) / Number(item['Custo Antigo']) * 100).toFixed(1)
+      }
+    }));
+
+  // Função para formatar o tooltip das melhorias
+  const formatTooltipMelhorias = (value, name, props) => {
+    if (!props || !props.payload || !props.payload[0]) {
+      return `${name}: ${formatLabel(value)}`;
+    }
+    const item = props.payload[0].payload;
+    
+    // Prepara a lista de melhorias
+    const listaMelhorias = [];
+    if (Number(item.melhorias.UPPH) > 0) listaMelhorias.push(`UPPH: +${item.melhorias.UPPH}%`);
+    if (Number(item.melhorias.UPH) > 0) listaMelhorias.push(`UPH: +${item.melhorias.UPH}%`);
+    if (Number(item.melhorias.HC) > 0) listaMelhorias.push(`HC: -${item.melhorias.HC}%`);
+    if (Number(item.melhorias.TP) > 0) listaMelhorias.push(`TP: -${item.melhorias.TP}%`);
+    if (Number(item.melhorias.Custo) > 0) listaMelhorias.push(`Custo: -${item.melhorias.Custo}%`);
+    
+    return [
+      `Produto: ${item.Produto}`,
+      `Data Implementação: ${item['Mês Implementação'] || item.Data || 'N/A'}`,
+      'Melhorias:',
+      ...listaMelhorias,
+      `Status: ${item.Status || 'N/A'}`,
+      `Descrição: ${item.DESCRIÇÃO || 'N/A'}`,
+      `Responsável: ${item.Responsável || 'N/A'}`
+    ];
+  };
+
   // Dados filtrados para cada tipo de gráfico
   const dadosFiltradosUPH = data.filter(temAlteracoesUPH);
   const dadosFiltradosHC = data.filter(temAlteracoesHC);
@@ -992,6 +1053,189 @@ function App() {
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
+                </Paper>
+              </Grid>
+
+              {/* Gráfico de Melhorias */}
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ 
+                  p: 2, 
+                  height: '100%',
+                  bgcolor: '#f5f5f5',
+                  borderRadius: 2,
+                  boxShadow: 3
+                }}>
+                  <Typography variant="h6" gutterBottom sx={{ color: '#2e7d32', fontWeight: 'medium' }}>
+                    Produtos com Melhorias Implementadas
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
+                    Detalhes das melhorias realizadas em cada produto
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 600, overflow: 'auto' }}>
+                    {produtosMelhoria.map((produto, index) => (
+                      <Paper 
+                        key={index} 
+                        sx={{ 
+                          p: 2, 
+                          bgcolor: '#fff',
+                          borderLeft: '4px solid #2e7d32',
+                          '&:hover': {
+                            boxShadow: 3,
+                            transform: 'translateX(4px)',
+                            transition: 'all 0.3s'
+                          }
+                        }}
+                      >
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <TrendingUpIcon color="success" />
+                              <Typography variant="h6" color="primary">
+                                {produto.Produto}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <CalendarTodayIcon fontSize="small" color="action" />
+                              <Typography variant="subtitle2" color="text.secondary">
+                                {produto['Mês Implementação'] || produto.Data || 'N/A'}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <AssignmentIcon fontSize="small" color="action" />
+                              <Typography variant="subtitle2" color="text.secondary">
+                                {produto.Status || 'N/A'}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 1 }}>
+                              <DescriptionIcon fontSize="small" color="action" />
+                              <Typography variant="body2">
+                                {produto.DESCRIÇÃO || 'Sem descrição'}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                              <StarIcon fontSize="small" color="primary" />
+                              <Typography variant="subtitle1" color="primary">
+                                Melhorias Realizadas
+                              </Typography>
+                            </Box>
+                            <Grid container spacing={1}>
+                              {Number(produto.melhorias.UPPH) > 0 && (
+                                <Grid item xs={6} sm={4}>
+                                  <Paper 
+                                    sx={{ 
+                                      p: 1.5, 
+                                      bgcolor: '#e8f5e9', 
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: 1
+                                    }}
+                                  >
+                                    <ArrowUpwardIcon color="success" fontSize="small" />
+                                    <Typography variant="subtitle2" color="success.main">
+                                      UPPH: +{produto.melhorias.UPPH}%
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              )}
+                              {Number(produto.melhorias.UPH) > 0 && (
+                                <Grid item xs={6} sm={4}>
+                                  <Paper 
+                                    sx={{ 
+                                      p: 1.5, 
+                                      bgcolor: '#e8f5e9',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: 1
+                                    }}
+                                  >
+                                    <SpeedIcon color="success" fontSize="small" />
+                                    <Typography variant="subtitle2" color="success.main">
+                                      UPH: +{produto.melhorias.UPH}%
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              )}
+                              {Number(produto.melhorias.HC) > 0 && (
+                                <Grid item xs={6} sm={4}>
+                                  <Paper 
+                                    sx={{ 
+                                      p: 1.5, 
+                                      bgcolor: '#e8f5e9',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: 1
+                                    }}
+                                  >
+                                    <PeopleIcon color="success" fontSize="small" />
+                                    <Typography variant="subtitle2" color="success.main">
+                                      HC: -{produto.melhorias.HC}%
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              )}
+                              {Number(produto.melhorias.TP) > 0 && (
+                                <Grid item xs={6} sm={4}>
+                                  <Paper 
+                                    sx={{ 
+                                      p: 1.5, 
+                                      bgcolor: '#e8f5e9',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: 1
+                                    }}
+                                  >
+                                    <TimerIcon color="success" fontSize="small" />
+                                    <Typography variant="subtitle2" color="success.main">
+                                      TP: -{produto.melhorias.TP}%
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              )}
+                              {Number(produto.melhorias.Custo) > 0 && (
+                                <Grid item xs={6} sm={4}>
+                                  <Paper 
+                                    sx={{ 
+                                      p: 1.5, 
+                                      bgcolor: '#e8f5e9',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: 1
+                                    }}
+                                  >
+                                    <AttachMoneyIcon color="success" fontSize="small" />
+                                    <Typography variant="subtitle2" color="success.main">
+                                      Custo: -{produto.melhorias.Custo}%
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              )}
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <PersonIcon fontSize="small" color="action" />
+                              <Typography variant="subtitle2" color="text.secondary">
+                                {produto.Responsável || 'N/A'}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    ))}
+                  </Box>
                 </Paper>
               </Grid>
 
