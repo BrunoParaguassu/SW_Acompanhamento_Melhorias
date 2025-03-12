@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,28 +9,11 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    target: 'esnext',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    },
+    assetsDir: 'assets',
     rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor': [
-            'react',
-            'react-dom',
-            '@mui/material',
-            'recharts'
-          ]
-        }
+      input: {
+        main: resolve(__dirname, 'index.html')
       }
     }
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom', '@mui/material', 'recharts']
   }
 })

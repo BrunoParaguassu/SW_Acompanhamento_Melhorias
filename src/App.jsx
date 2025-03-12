@@ -548,6 +548,18 @@ function App() {
   const dadosFiltradosCusto = data.filter(temAlteracoesCusto);
   const dadosFiltradosUPPH = data.filter(temAlteracoesUPPH);
 
+  const formatTooltip = (value) => {
+    if (value === null || value === undefined || value === '') return '0';
+    const num = typeof value === 'string' ? Number(value.replace(',', '.')) : Number(value);
+    return isNaN(num) ? '0' : num.toFixed(2);
+  };
+
+  const formatLabel = (value) => {
+    if (value === null || value === undefined || value === '') return '0';
+    const num = typeof value === 'string' ? Number(value.replace(',', '.')) : Number(value);
+    return isNaN(num) ? '0' : num.toFixed(1);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -734,13 +746,13 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'UPH', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip formatter={(value) => value.toFixed(2)} />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar dataKey="UPH Antigo" fill="url(#colorUphAntigo)" name="UPH Antigo">
                         <LabelList 
                           dataKey="UPH Antigo" 
                           position="top" 
-                          formatter={(value) => value.toFixed(1)}
+                          formatter={formatLabel}
                           offset={-15}
                           fill="#000"
                           style={{
@@ -754,7 +766,7 @@ function App() {
                         <LabelList 
                           dataKey="UPH Novo" 
                           position="top" 
-                          formatter={(value) => value.toFixed(1)}
+                          formatter={formatLabel}
                           offset={15}
                           fill="#000"
                           style={{
@@ -807,13 +819,13 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'HC', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip formatter={(value) => value.toFixed(2)} />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar dataKey="HC Antigo" fill="url(#colorHcAntigo)" name="HC Antigo">
-                        <LabelList dataKey="HC Antigo" position="top" formatter={(value) => value.toFixed(1)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="HC Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <Bar dataKey="HC Novo" fill="url(#colorHcNovo)" name="HC Novo">
-                        <LabelList dataKey="HC Novo" position="top" formatter={(value) => value.toFixed(1)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="HC Novo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <defs>
                         <linearGradient id="colorHcAntigo" x1="0" y1="0" x2="0" y2="1">
@@ -858,31 +870,34 @@ function App() {
                       />
                       <YAxis 
                         label={{ value: 'TP', angle: -90, position: 'insideLeft' }}
-                        tickFormatter={(value) => formatNumber(value)}
+                        tickFormatter={formatLabel}
                       />
-                      <Tooltip
-                        formatter={(value, name) => [
-                          formatNumber(value),
-                          name === 'TP Antigo' ? 'TP Antigo' : 'TP Novo'
-                        ]}
-                      />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar dataKey="TP Antigo" fill="url(#colorTpAntigo)" name="TP Antigo">
-                        <LabelList
-                          dataKey="TP Antigo"
-                          position="top"
-                          formatter={(value) => formatNumber(value)}
+                        <LabelList 
+                          dataKey="TP Antigo" 
+                          position="top" 
+                          formatter={formatLabel}
                           fill="#000000"
-                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '0px 0px 3px rgba(255,255,255,0.8)' }}
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            textShadow: '0px 0px 3px rgba(255,255,255,0.8)'
+                          }}
                         />
                       </Bar>
                       <Bar dataKey="TP Novo" fill="url(#colorTpNovo)" name="TP Novo">
-                        <LabelList
-                          dataKey="TP Novo"
-                          position="top"
-                          formatter={(value) => formatNumber(value)}
+                        <LabelList 
+                          dataKey="TP Novo" 
+                          position="top" 
+                          formatter={formatLabel}
                           fill="#000000"
-                          style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '0px 0px 3px rgba(255,255,255,0.8)' }}
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            textShadow: '0px 0px 3px rgba(255,255,255,0.8)'
+                          }}
                         />
                       </Bar>
                       <defs>
@@ -927,13 +942,13 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'Custo (R$)', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip formatter={(value) => `R$ ${value.toFixed(2)}`} />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar dataKey="Custo Antigo" fill="#e91e63" name="Custo Antigo">
-                        <LabelList dataKey="Custo Antigo" position="top" formatter={(value) => `R$ ${value.toFixed(2)}`} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="Custo Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <Bar dataKey="Custo Novo" fill="#9c27b0" name="Custo Novo">
-                        <LabelList dataKey="Custo Novo" position="top" formatter={(value) => `R$ ${value.toFixed(2)}`} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="Custo Novo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -967,13 +982,13 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'UPPH', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip formatter={(value) => value.toFixed(2)} />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar dataKey="UPPH Antigo" fill="#795548" name="UPPH Antigo">
-                        <LabelList dataKey="UPPH Antigo" position="top" formatter={(value) => value.toFixed(2)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="UPPH Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                       <Bar dataKey="UPPH Novo" fill="#607d8b" name="UPPH Novo">
-                        <LabelList dataKey="UPPH Novo" position="top" formatter={(value) => value.toFixed(2)} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
+                        <LabelList dataKey="UPPH Novo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -1015,16 +1030,7 @@ function App() {
                         orientation="right"
                         label={{ value: 'Melhoria (%)', angle: 90, position: 'insideRight' }}
                       />
-                      <Tooltip 
-                        formatter={(value, name) => {
-                          if (name === 'GANHO Por Peça') {
-                            return [`R$ ${value.toFixed(2)}`, name];
-                          } else if (name === '% Melhoria Custo' || name === 'Produtividade') {
-                            return [`${value.toFixed(1)}%`, name];
-                          }
-                          return [value.toFixed(2), name];
-                        }}
-                      />
+                      <RechartsTooltip formatter={formatTooltip} />
                       <Legend />
                       <Bar 
                         yAxisId="left"
@@ -1035,7 +1041,7 @@ function App() {
                         <LabelList 
                           dataKey="GANHO Por Peça" 
                           position="top"
-                          formatter={(value) => `R$ ${value.toFixed(2)}`}
+                          formatter={formatLabel}
                           style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
                         />
                       </Bar>
@@ -1051,7 +1057,7 @@ function App() {
                         <LabelList 
                           dataKey="% Melhoria Custo" 
                           position="top"
-                          formatter={(value) => `${value.toFixed(1)}%`}
+                          formatter={formatLabel}
                           style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
                         />
                       </Line>
@@ -1067,7 +1073,7 @@ function App() {
                         <LabelList 
                           dataKey="Produtividade" 
                           position="top"
-                          formatter={(value) => `${value.toFixed(1)}%`}
+                          formatter={formatLabel}
                           style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }}
                         />
                       </Line>

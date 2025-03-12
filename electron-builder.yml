@@ -1,0 +1,14 @@
+appId: com.sw-graficos
+productName: SW Graficos
+directories:
+  output: dist_electron
+  buildResources: build
+files:
+  - dist/**/*
+  - electron/**/*
+win:
+  target: portable
+  sign: null
+asar: true
+forceCodeSigning: false
+npmRebuild: false

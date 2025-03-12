@@ -1,0 +1,18 @@
+1. Adicione o seguinte import no topo do arquivo App.jsx (junto com os outros imports):
+
+import GraficoMelhorias from './components/GraficoMelhorias'
+
+2. Localize o Grid item do gráfico de UPPH e adicione o seguinte Grid item logo após ele:
+
+              {/* Gráfico de Melhorias */}
+              <Grid item xs={12} md={6}>
+                <GraficoMelhorias data={data} formatLabel={formatLabel} />
+              </Grid>
+
+As alterações devem ser feitas mantendo o mesmo estilo e estrutura dos outros gráficos. O novo gráfico de melhorias será exibido ao lado do gráfico de UPPH e mostrará as melhorias percentuais tanto em custo quanto em UPPH para cada produto.
+
+O componente GraficoMelhorias já foi criado em src/components/GraficoMelhorias.jsx e está pronto para uso. Ele recebe as props:
+- data: os dados completos do aplicativo
+- formatLabel: a função de formatação de números que já está sendo usada nos outros gráficos
+
+O gráfico mostrará automaticamente apenas os produtos que tiveram melhorias (valores positivos) em custo ou UPPH.

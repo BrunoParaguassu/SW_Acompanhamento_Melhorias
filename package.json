@@ -1,61 +1,31 @@
 {
   "name": "sw-graficos",
-  "private": true,
   "version": "1.0.0",
   "description": "Dashboard para acompanhamento de melhorias de processo",
+  "main": "electron/main.js",
   "author": {
     "name": "Bruno Paraguassu"
   },
-  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && electron-builder",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "electron:dev": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"electron .\"",
-    "electron:package": "npm run build && electron-builder --win portable --config.win.signAndEditExecutable=false"
-  },
-  "build": {
-    "appId": "com.sw.graficos",
-    "productName": "SW Gráficos",
-    "win": {
-      "target": [
-        "portable"
-      ],
-      "artifactName": "${productName}-${version}.exe"
-    },
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "dist/**/*",
-      "electron/**/*"
-    ],
-    "portable": {
-      "splashImage": false
-    }
+    "build": "vite build",
+    "electron:dev": "electron .",
+    "electron:build": "vite build && electron-packager . SW_Graficos --platform=win32 --arch=x64 --out=dist_electron --overwrite"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1",
-    "recharts": "^2.12.0",
-    "v8-compile-cache": "^2.4.0"
+    "recharts": "^2.12.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
-    "concurrently": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "electron": "^28.3.0",
-    "electron-builder": "^24.9.1",
+    "electron": "^29.1.0",
+    "electron-packager": "^17.1.2",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

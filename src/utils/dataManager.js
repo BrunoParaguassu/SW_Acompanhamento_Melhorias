@@ -63,6 +63,19 @@ const parseNumber = (value) => {
   return isNaN(number) ? 0 : number;
 };
 
+// Função auxiliar para garantir que o valor seja um número
+export const ensureNumber = (value) => {
+  if (value === null || value === undefined || value === '') return 0;
+  const num = typeof value === 'string' ? Number(value.replace(',', '.')) : Number(value);
+  return isNaN(num) ? 0 : num;
+};
+
+// Função auxiliar para formatar números com segurança
+export const safeNumberFormat = (value, decimals = 2) => {
+  const num = ensureNumber(value);
+  return num.toFixed(decimals);
+};
+
 // Transforma os dados do CSV para o formato da aplicação
 const transformData = (data) => {
   return data.map(row => {
