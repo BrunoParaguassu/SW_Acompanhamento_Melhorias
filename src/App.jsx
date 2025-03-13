@@ -426,6 +426,18 @@ function App() {
     downloadCSV(data)
   }
 
+  const handleClearData = () => {
+    setData([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setSnackbar({
+      open: true,
+      message: 'Dados limpos com sucesso!',
+      severity: 'info'
+    });
+  };
+
   const formatNumber = (value) => {
     if (typeof value !== 'number' || isNaN(value)) return '0';
     return value.toFixed(1);
@@ -778,6 +790,14 @@ function App() {
                 sx={{ mr: 2 }}
               >
                 Exportar CSV
+              </Button>
+              <Button 
+                variant="contained"
+                color="error"
+                onClick={handleClearData}
+                disabled={!data || data.length === 0}
+              >
+                Limpar Dados
               </Button>
               <Button 
                 variant="contained" 
