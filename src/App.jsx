@@ -505,27 +505,33 @@ function App() {
   }
 
   const handleImportCSV = async (event) => {
-    const file = event.target.files[0]
-    if (file) {
-      setLoading(true)
-      try {
-        const importedData = await importCSVFile(file)
-        setData(importedData)
-        setSnackbar({
-          open: true,
-          message: 'Arquivo importado com sucesso!',
-          severity: 'success'
-        })
-      } catch (error) {
-        console.error('Erro ao importar arquivo:', error)
-        setSnackbar({
-          open: true,
-          message: 'Erro ao importar o arquivo. Verifique se o formato está correto.',
-          severity: 'error'
-        })
-      } finally {
-        setLoading(false)
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    setLoading(true);
+    let allData = [];
+
+    try {
+      for (const file of files) {
+        const importedData = await importCSVFile(file);
+        allData = [...allData, ...importedData];
       }
+
+      setData(allData);
+      setSnackbar({
+        open: true,
+        message: `${files.length} arquivo(s) importado(s) com sucesso! Total de ${allData.length} registros.`,
+        severity: 'success'
+      });
+    } catch (error) {
+      console.error('Erro ao importar arquivo:', error);
+      setSnackbar({
+        open: true,
+        message: 'Erro ao importar arquivo. Verifique se é um arquivo CSV válido.',
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -755,6 +761,7 @@ function App() {
                 style={{ display: 'none' }}
                 ref={fileInputRef}
                 onChange={handleImportCSV}
+                multiple
               />
               <Button 
                 variant="contained" 
