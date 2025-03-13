@@ -613,38 +613,48 @@ function App() {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <Paper
-          sx={{
-            p: 1.5,
-            bgcolor: 'background.paper',
-            boxShadow: 2,
-            minWidth: 200
-          }}
-        >
+        <Box sx={{ 
+          p: 1.5, 
+          bgcolor: '#424242',
+          color: '#fff',
+          borderRadius: 1,
+          minWidth: 180,
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+        }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-            {label}
+            Comparativo {label}
           </Typography>
           {payload.map((item, index) => (
             <Box key={index} sx={{ mb: index < payload.length - 1 ? 1 : 0 }}>
               <Typography 
                 variant="body2" 
-                color={item.name.includes('Antigo') ? 'text.secondary' : 'primary'}
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}
+                sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between',
+                  mb: 0.5,
+                  '& strong': {
+                    color: item.name.includes('Antigo') ? '#fff' : '#4caf50',
+                    fontWeight: 'bold'
+                  }
+                }}
               >
                 <span>{item.name}:</span>
                 <strong>{formatLabel(item.value)}</strong>
               </Typography>
               <Typography 
                 variant="caption" 
-                color="text.secondary"
-                sx={{ display: 'flex', justifyContent: 'space-between' }}
+                sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between',
+                  color: 'rgba(255, 255, 255, 0.7)'
+                }}
               >
                 <span>Data:</span>
                 <span>{item.name.includes('Antigo') ? (data['Data Antes'] || 'N/A') : (data['Data Depois'] || data['Data'] || 'N/A')}</span>
               </Typography>
             </Box>
           ))}
-        </Paper>
+        </Box>
       );
     }
     return null;
@@ -1236,21 +1246,36 @@ function App() {
                                 <Grid item xs={6} sm={4}>
                                   <Tooltip 
                                     title={
-                                      <Box sx={{ p: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                      <Box sx={{ 
+                                        p: 2,
+                                        bgcolor: '#424242',
+                                        borderRadius: 1,
+                                        minWidth: 200
+                                      }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1.5, color: '#fff', fontWeight: 'bold' }}>
                                           Comparativo UPPH:
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                          <Typography variant="body2" color="text.secondary">
-                                            Antes: <strong>{formatLabel(produto['UPPH Antigo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Antes'] || 'N/A'}
-                                          </Typography>
-                                          <Typography variant="body2" color="success.main">
-                                            Depois: <strong>{formatLabel(produto['UPPH Novo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
-                                          </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                          <Box>
+                                            <Typography sx={{ color: '#fff', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Antes:</span>
+                                              <strong>{formatLabel(produto['UPPH Antigo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Antes'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography sx={{ color: '#4caf50', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Depois:</span>
+                                              <strong>{formatLabel(produto['UPPH Novo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Depois'] || produto['Data'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
                                         </Box>
                                       </Box>
                                     }
@@ -1286,21 +1311,36 @@ function App() {
                                 <Grid item xs={6} sm={4}>
                                   <Tooltip 
                                     title={
-                                      <Box sx={{ p: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                      <Box sx={{ 
+                                        p: 2,
+                                        bgcolor: '#424242',
+                                        borderRadius: 1,
+                                        minWidth: 200
+                                      }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1.5, color: '#fff', fontWeight: 'bold' }}>
                                           Comparativo UPH:
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                          <Typography variant="body2" color="text.secondary">
-                                            Antes: <strong>{formatLabel(produto['UPH Antigo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Antes'] || 'N/A'}
-                                          </Typography>
-                                          <Typography variant="body2" color="success.main">
-                                            Depois: <strong>{formatLabel(produto['UPH Novo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
-                                          </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                          <Box>
+                                            <Typography sx={{ color: '#fff', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Antes:</span>
+                                              <strong>{formatLabel(produto['UPH Antigo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Antes'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography sx={{ color: '#4caf50', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Depois:</span>
+                                              <strong>{formatLabel(produto['UPH Novo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Depois'] || produto['Data'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
                                         </Box>
                                       </Box>
                                     }
@@ -1330,21 +1370,36 @@ function App() {
                                 <Grid item xs={6} sm={4}>
                                   <Tooltip 
                                     title={
-                                      <Box sx={{ p: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                      <Box sx={{ 
+                                        p: 2,
+                                        bgcolor: '#424242',
+                                        borderRadius: 1,
+                                        minWidth: 200
+                                      }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1.5, color: '#fff', fontWeight: 'bold' }}>
                                           Comparativo HC:
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                          <Typography variant="body2" color="text.secondary">
-                                            Antes: <strong>{formatLabel(produto['HC Antigo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Antes'] || 'N/A'}
-                                          </Typography>
-                                          <Typography variant="body2" color="success.main">
-                                            Depois: <strong>{formatLabel(produto['HC Novo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
-                                          </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                          <Box>
+                                            <Typography sx={{ color: '#fff', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Antes:</span>
+                                              <strong>{formatLabel(produto['HC Antigo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Antes'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography sx={{ color: '#4caf50', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Depois:</span>
+                                              <strong>{formatLabel(produto['HC Novo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Depois'] || produto['Data'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
                                         </Box>
                                       </Box>
                                     }
@@ -1374,21 +1429,36 @@ function App() {
                                 <Grid item xs={6} sm={4}>
                                   <Tooltip 
                                     title={
-                                      <Box sx={{ p: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                      <Box sx={{ 
+                                        p: 2,
+                                        bgcolor: '#424242',
+                                        borderRadius: 1,
+                                        minWidth: 200
+                                      }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1.5, color: '#fff', fontWeight: 'bold' }}>
                                           Comparativo TP:
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                          <Typography variant="body2" color="text.secondary">
-                                            Antes: <strong>{formatLabel(produto['TP Antigo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Antes'] || 'N/A'}
-                                          </Typography>
-                                          <Typography variant="body2" color="success.main">
-                                            Depois: <strong>{formatLabel(produto['TP Novo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
-                                          </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                          <Box>
+                                            <Typography sx={{ color: '#fff', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Antes:</span>
+                                              <strong>{formatLabel(produto['TP Antigo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Antes'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography sx={{ color: '#4caf50', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Depois:</span>
+                                              <strong>{formatLabel(produto['TP Novo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Depois'] || produto['Data'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
                                         </Box>
                                       </Box>
                                     }
@@ -1418,21 +1488,36 @@ function App() {
                                 <Grid item xs={6} sm={4}>
                                   <Tooltip 
                                     title={
-                                      <Box sx={{ p: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                      <Box sx={{ 
+                                        p: 2,
+                                        bgcolor: '#424242',
+                                        borderRadius: 1,
+                                        minWidth: 200
+                                      }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1.5, color: '#fff', fontWeight: 'bold' }}>
                                           Comparativo Custo:
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                          <Typography variant="body2" color="text.secondary">
-                                            Antes: <strong>{formatLabel(produto['Custo Antigo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Antes'] || 'N/A'}
-                                          </Typography>
-                                          <Typography variant="body2" color="success.main">
-                                            Depois: <strong>{formatLabel(produto['Custo Novo'])}</strong>
-                                            <br />
-                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
-                                          </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                          <Box>
+                                            <Typography sx={{ color: '#fff', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Antes:</span>
+                                              <strong>{formatLabel(produto['Custo Antigo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Antes'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
+                                          <Box>
+                                            <Typography sx={{ color: '#4caf50', display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                              <span>Depois:</span>
+                                              <strong>{formatLabel(produto['Custo Novo'])}</strong>
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: 'flex', justifyContent: 'space-between' }}>
+                                              <span>Data:</span>
+                                              <span>{produto['Data Depois'] || produto['Data'] || 'N/A'}</span>
+                                            </Typography>
+                                          </Box>
                                         </Box>
                                       </Box>
                                     }
