@@ -609,6 +609,47 @@ function App() {
   const dadosFiltradosCusto = data.filter(temAlteracoesCusto);
   const dadosFiltradosUPPH = data.filter(temAlteracoesUPPH);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <Paper
+          sx={{
+            p: 1.5,
+            bgcolor: 'background.paper',
+            boxShadow: 2,
+            minWidth: 200
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+            {label}
+          </Typography>
+          {payload.map((item, index) => (
+            <Box key={index} sx={{ mb: index < payload.length - 1 ? 1 : 0 }}>
+              <Typography 
+                variant="body2" 
+                color={item.name.includes('Antigo') ? 'text.secondary' : 'primary'}
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}
+              >
+                <span>{item.name}:</span>
+                <strong>{formatLabel(item.value)}</strong>
+              </Typography>
+              <Typography 
+                variant="caption" 
+                color="text.secondary"
+                sx={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <span>Data:</span>
+                <span>{item.name.includes('Antigo') ? (data['Data Antes'] || 'N/A') : (data['Data Depois'] || data['Data'] || 'N/A')}</span>
+              </Typography>
+            </Box>
+          ))}
+        </Paper>
+      );
+    }
+    return null;
+  };
+
   const formatTooltip = (value) => {
     if (value === null || value === undefined || value === '') return '0';
     const num = typeof value === 'string' ? Number(value.replace(',', '.')) : Number(value);
@@ -807,7 +848,7 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'UPH', angle: -90, position: 'insideLeft' }} />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar dataKey="UPH Antigo" fill="url(#colorUphAntigo)" name="UPH Antigo">
                         <LabelList 
@@ -880,7 +921,7 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'HC', angle: -90, position: 'insideLeft' }} />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar dataKey="HC Antigo" fill="url(#colorHcAntigo)" name="HC Antigo">
                         <LabelList dataKey="HC Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
@@ -933,7 +974,7 @@ function App() {
                         label={{ value: 'TP', angle: -90, position: 'insideLeft' }}
                         tickFormatter={formatLabel}
                       />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar dataKey="TP Antigo" fill="url(#colorTpAntigo)" name="TP Antigo">
                         <LabelList 
@@ -1003,7 +1044,7 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'Custo (R$)', angle: -90, position: 'insideLeft' }} />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar dataKey="Custo Antigo" fill="#e91e63" name="Custo Antigo">
                         <LabelList dataKey="Custo Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
@@ -1043,7 +1084,7 @@ function App() {
                         interval={0}
                       />
                       <YAxis label={{ value: 'UPPH', angle: -90, position: 'insideLeft' }} />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar dataKey="UPPH Antigo" fill="#795548" name="UPPH Antigo">
                         <LabelList dataKey="UPPH Antigo" position="top" formatter={formatLabel} fill="#000000" style={{ fontSize: '11px', fontWeight: 'bold', textShadow: '1px 1px 1px rgba(255,255,255,0.5)' }} />
@@ -1071,7 +1112,28 @@ function App() {
                   <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
                     Detalhes das melhorias realizadas em cada produto
                   </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: 600, overflow: 'auto' }}>
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: 2, 
+                      maxHeight: 600, 
+                      overflow: 'auto',
+                      '&::-webkit-scrollbar': {
+                        width: '8px',
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: '4px',
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: '#90a4ae',
+                        borderRadius: '4px',
+                        '&:hover': {
+                          backgroundColor: '#78909c'
+                        }
+                      }
+                    }}>
                     {produtosMelhoria.map((produto, index) => (
                       <Paper 
                         key={index} 
@@ -1079,10 +1141,11 @@ function App() {
                           p: 2, 
                           bgcolor: '#fff',
                           borderLeft: '4px solid #2e7d32',
+                          transition: 'all 0.3s ease',
                           '&:hover': {
                             boxShadow: 3,
                             transform: 'translateX(4px)',
-                            transition: 'all 0.3s'
+                            bgcolor: '#fafafa'
                           }
                         }}
                       >
@@ -1097,141 +1160,307 @@ function App() {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <CalendarTodayIcon fontSize="small" color="action" />
-                              <Typography variant="subtitle2" color="text.secondary">
-                                {produto['Mês Implementação'] || produto.Data || 'N/A'}
-                              </Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <CalendarTodayIcon fontSize="small" color="primary" />
+                                <Typography variant="subtitle2" color="text.primary" sx={{ fontWeight: 'medium' }}>
+                                  Implementado em: {produto['Mês Implementação'] || produto.Data || 'N/A'}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <AssignmentIcon fontSize="small" color="action" />
-                              <Typography variant="subtitle2" color="text.secondary">
-                                {produto.Status || 'N/A'}
-                              </Typography>
+                              <Box 
+                                sx={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: 1,
+                                  bgcolor: produto.Status?.toLowerCase().includes('conclu') ? '#e8f5e9' : '#fff3e0',
+                                  p: 1,
+                                  borderRadius: 1
+                                }}
+                              >
+                                <AssignmentIcon 
+                                  fontSize="small" 
+                                  color={produto.Status?.toLowerCase().includes('conclu') ? 'success' : 'warning'} 
+                                />
+                                <Typography 
+                                  variant="subtitle2" 
+                                  color={produto.Status?.toLowerCase().includes('conclu') ? 'success.main' : 'warning.main'}
+                                  sx={{ fontWeight: 'medium' }}
+                                >
+                                  Status: {produto.Status || 'N/A'}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Grid>
                           <Grid item xs={12}>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 1 }}>
-                              <DescriptionIcon fontSize="small" color="action" />
-                              <Typography variant="body2">
-                                {produto.DESCRIÇÃO || 'Sem descrição'}
-                              </Typography>
-                            </Box>
+                            <Paper 
+                              sx={{ 
+                                p: 2, 
+                                bgcolor: '#f5f5f5', 
+                                borderRadius: 1,
+                                mt: 1
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                                <DescriptionIcon fontSize="small" color="primary" />
+                                <Box>
+                                  <Typography variant="subtitle2" color="primary" sx={{ fontWeight: 'medium', mb: 0.5 }}>
+                                    Descrição da Melhoria:
+                                  </Typography>
+                                  <Typography variant="body2" color="text.primary" sx={{ whiteSpace: 'pre-line' }}>
+                                    {produto.DESCRIÇÃO || 'Sem descrição'}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Paper>
                           </Grid>
                           <Grid item xs={12}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                              <StarIcon fontSize="small" color="primary" />
-                              <Typography variant="subtitle1" color="primary">
-                                Melhorias Realizadas
-                              </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <StarIcon fontSize="small" color="primary" />
+                                <Typography variant="subtitle1" color="primary" sx={{ fontWeight: 'medium' }}>
+                                  Melhorias Realizadas
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <PersonIcon fontSize="small" color="primary" />
+                                <Typography variant="subtitle2" color="text.primary" sx={{ fontWeight: 'medium' }}>
+                                  Responsável: <span style={{ color: '#1976d2' }}>{produto.Responsável || 'N/A'}</span>
+                                </Typography>
+                              </Box>
                             </Box>
                             <Grid container spacing={1}>
                               {Number(produto.melhorias.UPPH) > 0 && (
                                 <Grid item xs={6} sm={4}>
-                                  <Paper 
-                                    sx={{ 
-                                      p: 1.5, 
-                                      bgcolor: '#e8f5e9', 
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: 1
-                                    }}
+                                  <Tooltip 
+                                    title={
+                                      <Box sx={{ p: 1 }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                          Comparativo UPPH:
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                          <Typography variant="body2" color="text.secondary">
+                                            Antes: <strong>{formatLabel(produto['UPPH Antigo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Antes'] || 'N/A'}
+                                          </Typography>
+                                          <Typography variant="body2" color="success.main">
+                                            Depois: <strong>{formatLabel(produto['UPPH Novo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
+                                    arrow
+                                    placement="top"
                                   >
-                                    <ArrowUpwardIcon color="success" fontSize="small" />
-                                    <Typography variant="subtitle2" color="success.main">
-                                      UPPH: +{produto.melhorias.UPPH}%
-                                    </Typography>
-                                  </Paper>
+                                    <Paper 
+                                      sx={{ 
+                                        p: 1.5, 
+                                        bgcolor: '#e8f5e9', 
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': {
+                                          transform: 'translateY(-2px)',
+                                          boxShadow: 2,
+                                          bgcolor: '#c8e6c9'
+                                        }
+                                      }}
+                                    >
+                                      <ArrowUpwardIcon color="success" fontSize="small" />
+                                      <Typography variant="subtitle2" color="success.main">
+                                        UPPH: +{produto.melhorias.UPPH}%
+                                      </Typography>
+                                    </Paper>
+                                  </Tooltip>
                                 </Grid>
                               )}
                               {Number(produto.melhorias.UPH) > 0 && (
                                 <Grid item xs={6} sm={4}>
-                                  <Paper 
-                                    sx={{ 
-                                      p: 1.5, 
-                                      bgcolor: '#e8f5e9',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: 1
-                                    }}
+                                  <Tooltip 
+                                    title={
+                                      <Box sx={{ p: 1 }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                          Comparativo UPH:
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                          <Typography variant="body2" color="text.secondary">
+                                            Antes: <strong>{formatLabel(produto['UPH Antigo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Antes'] || 'N/A'}
+                                          </Typography>
+                                          <Typography variant="body2" color="success.main">
+                                            Depois: <strong>{formatLabel(produto['UPH Novo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
+                                    arrow
+                                    placement="top"
                                   >
-                                    <SpeedIcon color="success" fontSize="small" />
-                                    <Typography variant="subtitle2" color="success.main">
-                                      UPH: +{produto.melhorias.UPH}%
-                                    </Typography>
-                                  </Paper>
+                                    <Paper 
+                                      sx={{ 
+                                        p: 1.5, 
+                                        bgcolor: '#e8f5e9',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <SpeedIcon color="success" fontSize="small" />
+                                      <Typography variant="subtitle2" color="success.main">
+                                        UPH: +{produto.melhorias.UPH}%
+                                      </Typography>
+                                    </Paper>
+                                  </Tooltip>
                                 </Grid>
                               )}
                               {Number(produto.melhorias.HC) > 0 && (
                                 <Grid item xs={6} sm={4}>
-                                  <Paper 
-                                    sx={{ 
-                                      p: 1.5, 
-                                      bgcolor: '#e8f5e9',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: 1
-                                    }}
+                                  <Tooltip 
+                                    title={
+                                      <Box sx={{ p: 1 }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                          Comparativo HC:
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                          <Typography variant="body2" color="text.secondary">
+                                            Antes: <strong>{formatLabel(produto['HC Antigo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Antes'] || 'N/A'}
+                                          </Typography>
+                                          <Typography variant="body2" color="success.main">
+                                            Depois: <strong>{formatLabel(produto['HC Novo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
+                                    arrow
+                                    placement="top"
                                   >
-                                    <PeopleIcon color="success" fontSize="small" />
-                                    <Typography variant="subtitle2" color="success.main">
-                                      HC: -{produto.melhorias.HC}%
-                                    </Typography>
-                                  </Paper>
+                                    <Paper 
+                                      sx={{ 
+                                        p: 1.5, 
+                                        bgcolor: '#e8f5e9',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <PeopleIcon color="success" fontSize="small" />
+                                      <Typography variant="subtitle2" color="success.main">
+                                        HC: -{produto.melhorias.HC}%
+                                      </Typography>
+                                    </Paper>
+                                  </Tooltip>
                                 </Grid>
                               )}
                               {Number(produto.melhorias.TP) > 0 && (
                                 <Grid item xs={6} sm={4}>
-                                  <Paper 
-                                    sx={{ 
-                                      p: 1.5, 
-                                      bgcolor: '#e8f5e9',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: 1
-                                    }}
+                                  <Tooltip 
+                                    title={
+                                      <Box sx={{ p: 1 }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                          Comparativo TP:
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                          <Typography variant="body2" color="text.secondary">
+                                            Antes: <strong>{formatLabel(produto['TP Antigo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Antes'] || 'N/A'}
+                                          </Typography>
+                                          <Typography variant="body2" color="success.main">
+                                            Depois: <strong>{formatLabel(produto['TP Novo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
+                                    arrow
+                                    placement="top"
                                   >
-                                    <TimerIcon color="success" fontSize="small" />
-                                    <Typography variant="subtitle2" color="success.main">
-                                      TP: -{produto.melhorias.TP}%
-                                    </Typography>
-                                  </Paper>
+                                    <Paper 
+                                      sx={{ 
+                                        p: 1.5, 
+                                        bgcolor: '#e8f5e9',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <TimerIcon color="success" fontSize="small" />
+                                      <Typography variant="subtitle2" color="success.main">
+                                        TP: -{produto.melhorias.TP}%
+                                      </Typography>
+                                    </Paper>
+                                  </Tooltip>
                                 </Grid>
                               )}
                               {Number(produto.melhorias.Custo) > 0 && (
                                 <Grid item xs={6} sm={4}>
-                                  <Paper 
-                                    sx={{ 
-                                      p: 1.5, 
-                                      bgcolor: '#e8f5e9',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: 1
-                                    }}
+                                  <Tooltip 
+                                    title={
+                                      <Box sx={{ p: 1 }}>
+                                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                          Comparativo Custo:
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                          <Typography variant="body2" color="text.secondary">
+                                            Antes: <strong>{formatLabel(produto['Custo Antigo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Antes'] || 'N/A'}
+                                          </Typography>
+                                          <Typography variant="body2" color="success.main">
+                                            Depois: <strong>{formatLabel(produto['Custo Novo'])}</strong>
+                                            <br />
+                                            Data: {produto['Data Depois'] || produto['Data'] || 'N/A'}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
+                                    arrow
+                                    placement="top"
                                   >
-                                    <AttachMoneyIcon color="success" fontSize="small" />
-                                    <Typography variant="subtitle2" color="success.main">
-                                      Custo: -{produto.melhorias.Custo}%
-                                    </Typography>
-                                  </Paper>
+                                    <Paper 
+                                      sx={{ 
+                                        p: 1.5, 
+                                        bgcolor: '#e8f5e9',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <AttachMoneyIcon color="success" fontSize="small" />
+                                      <Typography variant="subtitle2" color="success.main">
+                                        Custo: -{produto.melhorias.Custo}%
+                                      </Typography>
+                                    </Paper>
+                                  </Tooltip>
                                 </Grid>
                               )}
                             </Grid>
                           </Grid>
-                          <Grid item xs={12}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <PersonIcon fontSize="small" color="action" />
-                              <Typography variant="subtitle2" color="text.secondary">
-                                {produto.Responsável || 'N/A'}
-                              </Typography>
-                            </Box>
-                          </Grid>
+
                         </Grid>
                       </Paper>
                     ))}
@@ -1274,7 +1503,7 @@ function App() {
                         orientation="right"
                         label={{ value: 'Melhoria (%)', angle: 90, position: 'insideRight' }}
                       />
-                      <RechartsTooltip formatter={formatTooltip} />
+                      <RechartsTooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar 
                         yAxisId="left"
